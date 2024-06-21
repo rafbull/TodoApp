@@ -49,7 +49,7 @@ extension TodoItem {
             return convertFrom(dictionary: jsonDictionary)
             
         } else if let jsonData = json as? Data {
-            return convertFrom(jsonData: jsonData)
+            return convertFrom(data: jsonData)
         }
         
         return nil
@@ -75,9 +75,9 @@ extension TodoItem {
 // MARK: - Private Extension
 private extension TodoItem {
     // MARK: Static Methods
-    static func convertFrom(jsonData: Data) -> TodoItem? {
+    static func convertFrom(data: Data) -> TodoItem? {
         do {
-            guard let dictionary = try JSONSerialization.jsonObject(with: jsonData) as? [String: Any]
+            guard let dictionary = try JSONSerialization.jsonObject(with: data) as? [String: Any]
             else { return nil }
             return convertFrom(dictionary: dictionary)
         } catch {
