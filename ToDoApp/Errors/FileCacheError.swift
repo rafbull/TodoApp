@@ -7,14 +7,14 @@
 
 import Foundation
 
-enum FileCacheError: Error {
-case badID(_ id: String)
+enum FileCacheError: LocalizedError {
+case badId(_ id: String)
 }
 
 extension FileCacheError {
     var errorDescription: String {
         switch self {
-        case .badID(let id):
+        case .badId(let id):
             return "⚠️ This TodoItem ID is already in use! ID: \"\(id)\""
         }
     }
