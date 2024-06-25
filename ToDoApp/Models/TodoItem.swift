@@ -29,7 +29,7 @@ struct TodoItem {
         importance: Importance,
         deadline: Date?,
         isDone: Bool,
-        creationDate: Date,
+        creationDate: Date = Date(),
         modifyDate: Date?
     ) {
         self.id = id
@@ -56,7 +56,26 @@ extension TodoItem {
     }
     
     var json: Any {
-        convertToDictionary()
+        var dictionary: [String: Any] = [
+            PropertyName.id.rawValue: id,
+            PropertyName.text.rawValue: text,
+            PropertyName.isDone.rawValue: isDone,
+            PropertyName.creationDate.rawValue: creationDate.timeIntervalSince1970,
+        ]
+        
+        if importance != .normal {
+            dictionary[PropertyName.importance.rawValue] = importance.rawValue
+        }
+        
+        if let deadline = deadline {
+            dictionary[PropertyName.deadline.rawValue] = deadline.timeIntervalSince1970
+        }
+        
+        if let modifyDate = modifyDate {
+            dictionary[PropertyName.modifyDate.rawValue] = modifyDate.timeIntervalSince1970
+        }
+        
+        return dictionary
     }
 }
 
@@ -64,11 +83,39 @@ extension TodoItem {
 // MARK: - Extension CSV
 extension TodoItem {
     static func parse(csv: Any) -> TodoItem? {
-        nil
+        guard let csvString = csv as? String else { return nil }
+        let components = parseCSVLine(csvString)
+        guard components.count == PropertyName.allCases.count else { return nil }
+        
+        let id = components[0]
+        let text = components[1]
+        let importance = Importance(rawValue: components[2]) ?? .normal
+        let deadline = TimeInterval(components[3]).flatMap { Date(timeIntervalSince1970: $0) }
+        let isDone = Bool(components[4]) ?? false
+        let creationDate = Date(timeIntervalSince1970: TimeInterval(components[5]) ?? 0)
+        let modifyDate = TimeInterval(components[6]).flatMap { Date(timeIntervalSince1970: $0) }
+        
+        return TodoItem(
+            id: id,
+            text: text,
+            importance: importance,
+            deadline: deadline,
+            isDone: isDone,
+            creationDate: creationDate,
+            modifyDate: modifyDate
+        )
     }
     
     var csv: Any {
-        ""
+        var csvString = "\(id),\"\(text)\",\(importance.rawValue),"
+        csvString += deadline?.timeIntervalSince1970.description ?? ""
+        csvString += ",\(isDone),\(creationDate.timeIntervalSince1970)"
+        if let modifyDate = modifyDate {
+            csvString += ",\(modifyDate.timeIntervalSince1970)"
+        } else {
+            csvString += ","
+        }
+        return csvString
     }
 }
 
@@ -107,20 +154,17 @@ private extension TodoItem {
                     importance = .normal
                 }
             case .deadline:
-                if let deadlineString = dictionary[$0.rawValue] as? String,
-                   let timeInterval = TimeInterval(deadlineString) {
+                if let timeInterval = dictionary[$0.rawValue] as? TimeInterval {
                     deadline = .init(timeIntervalSince1970: timeInterval)
                 }
             case .isDone:
                 isDone = dictionary[$0.rawValue] as? Bool
             case .creationDate:
-                if let creationDateString = dictionary[$0.rawValue] as? String,
-                   let timeInterval = TimeInterval(creationDateString) {
+                if let timeInterval = dictionary[$0.rawValue] as? TimeInterval {
                     creationDate = .init(timeIntervalSince1970: timeInterval)
                 }
             case .modifyDate:
-                if let modifyDateString = dictionary[$0.rawValue] as? String,
-                   let timeInterval = TimeInterval(modifyDateString) {
+                if let timeInterval = dictionary[$0.rawValue] as? TimeInterval {
                     modifyDate = .init(timeIntervalSince1970: timeInterval)
                 }
             }
@@ -144,6 +188,26 @@ private extension TodoItem {
         )
     }
     
+    static func parseCSVLine(_ line: String) -> [String] {
+        var results = [String]()
+        var value = ""
+        var insideQuotes = false
+        
+        line.forEach { character in
+            if character == "\"" {
+                insideQuotes.toggle()
+            } else if character == "," && !insideQuotes {
+                results.append(value)
+                value = ""
+            } else {
+                value.append(character)
+            }
+        }
+        
+        results.append(value)
+        return results
+    }
+    
     // MARK: Properties
     enum PropertyName: String, CaseIterable {
         case id
@@ -153,29 +217,5 @@ private extension TodoItem {
         case isDone
         case creationDate
         case modifyDate
-    }
-    
-    // MARK: Methods
-    func convertToDictionary() -> [String: Any] {
-        var dictionary: [String: Any] = [
-            PropertyName.id.rawValue: id,
-            PropertyName.text.rawValue: text,
-            PropertyName.isDone.rawValue: isDone,
-            PropertyName.creationDate.rawValue: String(creationDate.timeIntervalSince1970),
-        ]
-        
-        if importance != .normal {
-            dictionary[PropertyName.importance.rawValue] = importance.rawValue
-        }
-        
-        if let deadline = deadline {
-            dictionary[PropertyName.deadline.rawValue] = String(deadline.timeIntervalSince1970)
-        }
-        
-        if let modifyDate = modifyDate {
-            dictionary[PropertyName.modifyDate.rawValue] = String(modifyDate.timeIntervalSince1970)
-        }
-        
-        return dictionary
     }
 }
