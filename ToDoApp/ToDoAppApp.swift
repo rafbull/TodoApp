@@ -9,9 +9,11 @@ import SwiftUI
 
 @main
 struct ToDoAppApp: App {
+    private let todoListViewModel = TodoListViewModel(dataService: DataService())
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            TodoListView(viewModel: todoListViewModel)
         }
     }
 }

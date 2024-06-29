@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TodoItem {
+struct TodoItem: Identifiable {
     let id: String
     let text: String
     let importance: Importance
@@ -15,8 +15,9 @@ struct TodoItem {
     let isDone: Bool
     let creationDate: Date
     let modifyDate: Date?
+    let hexColor: String
     
-    enum Importance: String {
+    enum Importance: String, CaseIterable {
         case unimportant
         case normal
         case important
@@ -30,7 +31,8 @@ struct TodoItem {
         deadline: Date?,
         isDone: Bool,
         creationDate: Date = Date(),
-        modifyDate: Date?
+        modifyDate: Date?,
+        hexColor: String = "#FFFFFF"
     ) {
         self.id = id
         self.text = text
@@ -39,6 +41,7 @@ struct TodoItem {
         self.isDone = isDone
         self.creationDate = creationDate
         self.modifyDate = modifyDate
+        self.hexColor = hexColor
     }
 }
 
@@ -89,11 +92,12 @@ extension TodoItem {
         
         let id = components[0]
         let text = components[1]
-        let importance = Importance(rawValue: components[2]) ?? .normal
+        guard let importance = Importance(rawValue: components[2]) else { return nil }
         let deadline = TimeInterval(components[3]).flatMap { Date(timeIntervalSince1970: $0) }
-        let isDone = Bool(components[4]) ?? false
+        guard let isDone = Bool(components[4]) else { return nil }
         let creationDate = Date(timeIntervalSince1970: TimeInterval(components[5]) ?? 0)
         let modifyDate = TimeInterval(components[6]).flatMap { Date(timeIntervalSince1970: $0) }
+        let hexColor = components[7]
         
         return TodoItem(
             id: id,
@@ -102,7 +106,8 @@ extension TodoItem {
             deadline: deadline,
             isDone: isDone,
             creationDate: creationDate,
-            modifyDate: modifyDate
+            modifyDate: modifyDate,
+            hexColor: hexColor
         )
     }
     
@@ -115,6 +120,7 @@ extension TodoItem {
         } else {
             csvString += ","
         }
+        csvString += ",\(hexColor)"
         return csvString
     }
 }
@@ -140,6 +146,7 @@ private extension TodoItem {
         var isDone: Bool?
         var creationDate: Date?
         var modifyDate: Date?
+        var hexColor: String?
         
         PropertyName.allCases.forEach {
             switch $0 {
@@ -167,6 +174,8 @@ private extension TodoItem {
                 if let timeInterval = dictionary[$0.rawValue] as? TimeInterval {
                     modifyDate = .init(timeIntervalSince1970: timeInterval)
                 }
+            case .hexColor:
+                hexColor = dictionary[$0.rawValue] as? String
             }
         }
         
@@ -174,7 +183,8 @@ private extension TodoItem {
               let text = text,
               let importance = importance,
               let isDone = isDone,
-              let creationDate = creationDate
+              let creationDate = creationDate,
+              let hexColor = hexColor
         else { return nil }
         
         return TodoItem(
@@ -184,7 +194,8 @@ private extension TodoItem {
             deadline: deadline,
             isDone: isDone,
             creationDate: creationDate,
-            modifyDate: modifyDate
+            modifyDate: modifyDate,
+            hexColor: hexColor
         )
     }
     
@@ -217,5 +228,6 @@ private extension TodoItem {
         case isDone
         case creationDate
         case modifyDate
+        case hexColor
     }
 }
