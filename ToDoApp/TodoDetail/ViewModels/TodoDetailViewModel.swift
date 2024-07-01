@@ -58,7 +58,7 @@ final class TodoDetailViewModel: ObservableObject {
         
         todoItem = updatedItem
         
-        dataService.update(updatedItem)
+        dataService.addNewOrUpdate(updatedItem)
     }
     
     func deleteTodoItem() {
