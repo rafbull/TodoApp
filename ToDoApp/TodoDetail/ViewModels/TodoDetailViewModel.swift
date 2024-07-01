@@ -65,8 +65,3 @@ final class TodoDetailViewModel: ObservableObject {
         dataService.delete(todoItem)
     }
 }
-
-// MARK: - Private Extension
-private extension TodoDetailViewModel {
-    
-}

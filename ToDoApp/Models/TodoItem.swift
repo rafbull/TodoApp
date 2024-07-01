@@ -64,6 +64,7 @@ extension TodoItem {
             PropertyName.text.rawValue: text,
             PropertyName.isDone.rawValue: isDone,
             PropertyName.creationDate.rawValue: creationDate.timeIntervalSince1970,
+            PropertyName.hexColor.rawValue: hexColor
         ]
         
         if importance != .normal {
@@ -81,7 +82,6 @@ extension TodoItem {
         return dictionary
     }
 }
-
 
 // MARK: - Extension CSV
 extension TodoItem {

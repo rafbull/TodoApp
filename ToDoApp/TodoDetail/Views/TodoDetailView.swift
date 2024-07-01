@@ -155,4 +155,3 @@ struct TodoDetailView_Previews: PreviewProvider {
         TodoDetailView(viewModel: .init(todoItem: nil, dataService: DataService()), didTapSave: .constant(false), didTapDelete: .constant(false))
     }
 }
-
