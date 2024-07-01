@@ -54,7 +54,20 @@ final class TodoListViewModel: ObservableObject {
         
         guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else { return }
         todoItems[index] = updatedItem
-        dataService.update(updatedItem)
+        dataService.addNewOrUpdate(updatedItem)
+    }
+    
+    func addNewItem(with text: String) {
+        
+        let newItem = TodoItem(
+            text: text,
+            importance: .normal,
+            deadline: nil,
+            isDone: false,
+            modifyDate: nil
+        )
+        todoItems.append(newItem)
+        dataService.addNewOrUpdate(newItem)
     }
     
     func delete(_ todoItem: TodoItem) {

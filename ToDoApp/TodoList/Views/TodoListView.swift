@@ -12,10 +12,12 @@ struct TodoListView: View {
     @StateObject var viewModel: TodoListViewModel
     @State var showModalEmptyItem = false
     @State var showIsDoneItems = false
-    @State var sortTodoItems = false
+    @State var sortTodoItems = true
     @State var selectedTodoItem: TodoItem?
     @State var didTapSave = false
     @State var didTapDelete = false
+    @State var didTapCheckBoxButton = false
+    @State var textFieldText = ""
     
     // MARK: - Private Constants
     private enum UIConstant {
@@ -68,6 +70,7 @@ private extension TodoListView {
             }
             .animation(.easeInOut, value: showIsDoneItems)
         }
+        .navigationViewStyle(.stack)
         .sheet(item: $selectedTodoItem) { item in
             TodoDetailView(
                 viewModel: TodoDetailViewModel(todoItem: item, dataService: viewModel.dataService),
@@ -81,12 +84,13 @@ private extension TodoListView {
     var todoItemsSection: some View {
         Section {
             ForEach(todoItemsList) { todoItem in
-                TodoListRowView(todoItem: todoItem)
+                TodoListRowView(todoItem: todoItem, viewModel: viewModel)
                     .contentShape(Rectangle())
                     .onTapGesture {
                         selectedTodoItem = todoItem
                     }
                     .transition(.move(edge: .bottom))
+                
                     .swipeActions(edge: .leading) {
                         createLeadingSwipeIsDoneButton(todoItem)
                     }
@@ -97,16 +101,21 @@ private extension TodoListView {
                         createTrailingSwipeInfoButton(todoItem)
                     }
             }
-            Text("Новое")
-                .font(AppFont.body)
-                .foregroundColor(AppColor.tertiaryLabel)
-                .padding(.vertical)
-                .padding(.horizontal, UIConstant.newItemLeadingPadding)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
-                .contentShape(Rectangle())
-                .onTapGesture {
-                    showModalEmptyItem.toggle()
-                }
+            TextField(text: $textFieldText) {
+                Text("Новое")
+                    .font(AppFont.body)
+                    .foregroundColor(AppColor.tertiaryLabel)
+                
+            }
+            .submitLabel(.done)
+            .onSubmit {
+                viewModel.addNewItem(with: textFieldText)
+                textFieldText = ""
+            }
+            .padding(.vertical)
+            .padding(.horizontal, UIConstant.newItemLeadingPadding)
+            .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
         } header: {
             TodoListHeaderView(
                 isDoneCount: viewModel.isDoneCount,

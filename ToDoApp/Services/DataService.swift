@@ -9,7 +9,7 @@ import Foundation
 
 protocol DataServiceProtocol {
     func getTodoItems(completion: ([TodoItem]) -> Void)
-    func update(_ todoItem: TodoItem)
+    func addNewOrUpdate(_ todoItem: TodoItem)
     func delete(_ todoItem: TodoItem)
 }
 
@@ -27,7 +27,7 @@ final class DataService: DataServiceProtocol {
         completion(todoItems)
     }
     
-    func update(_ todoItem: TodoItem) {
+    func addNewOrUpdate(_ todoItem: TodoItem) {
         if let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) {
             todoItems[index] = todoItem
         } else {

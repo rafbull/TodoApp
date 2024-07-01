@@ -10,6 +10,7 @@ import SwiftUI
 struct TodoListRowView: View {
     // MARK: - Internal Properties
     let todoItem: TodoItem
+    let viewModel: TodoListViewModel
     
     // MARK: - Private Constants
     private enum UIConstant {
@@ -24,14 +25,20 @@ struct TodoListRowView: View {
     // MARK: - View body
     var body: some View {
         HStack(spacing: UIConstant.hStackSpacing) {
-            Image(systemName: todoItem.isDone ? "checkmark.circle" : "circle")
-                .resizable()
-                .frame(width: UIConstant.todoItemImageSideSize, height: UIConstant.todoItemImageSideSize)
-                .foregroundColor(
-                    todoItem.isDone ?
-                    AppColor.green : (todoItem.importance == .important) ?
-                    AppColor.red : AppColor.separatorSupport
-                )
+            Button {
+                viewModel.markAs(isDone: !todoItem.isDone, todoItem)
+            } label: {
+                Image(systemName: todoItem.isDone ? "checkmark.circle" : "circle")
+                    .resizable()
+                    .frame(width: UIConstant.todoItemImageSideSize, height: UIConstant.todoItemImageSideSize)
+                    .foregroundColor(
+                        todoItem.isDone ?
+                        AppColor.green : (todoItem.importance == .important) ?
+                        AppColor.red : AppColor.separatorSupport
+                    )
+            }
+            .buttonStyle(.borderless)
+            
             Rectangle()
                 .fill(Color.convertFromHex(todoItem.hexColor) ?? AppColor.secondaryBackground)
                 .frame(width: UIConstant.todoItemColorFrameWidth)
@@ -79,8 +86,14 @@ struct TodoListRowView_Previews: PreviewProvider {
     
     static var previews: some View {
         Group {
-            TodoListRowView(todoItem: firstTodoItem)
-            TodoListRowView(todoItem: secondTodoItem)
+            TodoListRowView(
+                todoItem: firstTodoItem,
+                viewModel: TodoListViewModel(dataService: DataService())
+            )
+            TodoListRowView(
+                todoItem: secondTodoItem,
+                viewModel: TodoListViewModel(dataService: DataService())
+            )
         }
         .previewLayout(.sizeThatFits)
     }

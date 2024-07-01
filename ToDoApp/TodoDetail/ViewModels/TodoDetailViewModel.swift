@@ -58,15 +58,10 @@ final class TodoDetailViewModel: ObservableObject {
         
         todoItem = updatedItem
         
-        dataService.update(updatedItem)
+        dataService.addNewOrUpdate(updatedItem)
     }
     
     func deleteTodoItem() {
         dataService.delete(todoItem)
     }
-}
-
-// MARK: - Private Extension
-private extension TodoDetailViewModel {
-    
 }
