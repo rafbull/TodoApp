@@ -8,17 +8,16 @@
 import SwiftUI
 
 struct TodoDetailView: View {
-    @Environment(\.dismiss) var dismiss
-    @Environment(\.horizontalSizeClass) var horizontalSizeClass
-    
+    // MARK: - Internal Properties
     @StateObject var viewModel: TodoDetailViewModel
-    @Binding var didTapSave: Bool
-    @Binding var didTapDelete: Bool
     @State var textEditorText = ""
-    @State var showAnimation = false
     
+    // MARK: - Private Properties
+    @Environment(\.dismiss) private var dismiss
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     @FocusState private var textEditorIsFocused: Bool
     @State private var keyboardHeight: CGFloat = 0
+    @State private var showAnimation = false
     
     // MARK: - Private Constants
     private enum UIConstant {
@@ -45,13 +44,8 @@ struct TodoDetailView: View {
                 if horizontalSizeClass == .compact {
                     Section {
                         TodoDetailSettingsSectionView(
-                            showAnimation: $showAnimation,
-                            pickerSelection: $viewModel.todoItemImportanceNumber,
-                            selectedDate: $viewModel.todoItemDeadline,
-                            toggleIsOn: $viewModel.todoItemHasDeadline,
-                            selectedColor: $viewModel.todoItemColor,
-                            selectedHexColorValue: $viewModel.todoItemHexColorValue,
-                            isDatePickerHidden: true
+                            viewModel: viewModel,
+                            showAnimation: $showAnimation
                         )
                     }
                     Section {
@@ -72,14 +66,13 @@ struct TodoDetailView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Сохранить") {
                         viewModel.updateItem(with: textEditorText, modifyDate: .now)
-                        didTapSave.toggle()
                         dismiss()
                     }
                     .disabled(textEditorText.isEmpty)
                 }
             }
         }
-        // TODO: - tap gesture
+        // TODO: - tap gesture to close keyboard
 //        .simultaneousGesture(
 //            TapGesture()
 //                .onEnded { _ in
@@ -100,6 +93,13 @@ struct TodoDetailView: View {
             TextEditor(text: $textEditorText)
                 .focused($textEditorIsFocused)
                 .frame(minHeight: UIConstant.textEditorMinHeight)
+//                .toolbar {
+//                    ToolbarItem(placement: .keyboard) {
+//                        Button("Скрыть") {
+//                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+//                        }
+//                    }
+//                }
             if textEditorText.isEmpty {
                 Text(UIConstant.placeholder)
                     .foregroundColor(Color(.placeholderText))
@@ -112,7 +112,6 @@ struct TodoDetailView: View {
     private var deleteTodoItemButton: some View {
         Button("Удалить") {
             viewModel.deleteTodoItem()
-            didTapDelete.toggle()
             dismiss()
         }
         .padding()
@@ -152,6 +151,8 @@ private extension TodoDetailView {
 // MARK: - PreviewProvider
 struct TodoDetailView_Previews: PreviewProvider {
     static var previews: some View {
-        TodoDetailView(viewModel: .init(todoItem: nil, dataService: DataService()), didTapSave: .constant(false), didTapDelete: .constant(false))
+        TodoDetailView(
+            viewModel: .init(todoItem: nil, dataService: DataService())
+        )
     }
 }

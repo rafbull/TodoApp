@@ -8,9 +8,12 @@
 import SwiftUI
 
 struct SpectrumColorPickerView: View {
+    // MARK: - Internal Properties
     @Binding var selectedColor: Color
     @Binding var hexColorValue: String
-    @State var size: CGSize = .zero
+    
+    // MARK: - Private Properties
+    @State private var size: CGSize = .zero
     @State private var brightness: Double = 1.0
     
     // MARK: - Private Constants
@@ -112,7 +115,6 @@ private extension SpectrumColorPickerView {
         } else {
             convertedValue = String(format: "#%02X%02X%02X%02X", r, g, b, a)
         }
-        
         return convertedValue
     }
 }

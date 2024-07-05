@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Combine
 
 final class TodoDetailViewModel: ObservableObject {
     // MARK: - Internal Properties
@@ -15,9 +16,12 @@ final class TodoDetailViewModel: ObservableObject {
     @Published var todoItemHasDeadline: Bool
     @Published var todoItemHexColorValue: String
     @Published var todoItemColor: Color
+    @Published var todoItemCategory: TodoItem.Category
+    @Published var todoItemCategories = [TodoItem.Category]()
     
     // MARK: - Private Properties
     private let dataService: DataServiceProtocol
+    private var subscriptions = Set<AnyCancellable>()
     
     // MARK: - Initialization
     init(todoItem: TodoItem?, dataService: DataServiceProtocol) {
@@ -29,7 +33,8 @@ final class TodoDetailViewModel: ObservableObject {
                 importance: .unimportant,
                 deadline: nil,
                 isDone: false,
-                modifyDate: .now
+                modifyDate: .now,
+                category: nil
             )
         }
         
@@ -40,6 +45,12 @@ final class TodoDetailViewModel: ObservableObject {
         todoItemHasDeadline = todoItem?.deadline != nil
         todoItemHexColorValue = todoItem?.hexColor ?? "#FFFFFF"
         todoItemColor = Color.convertFromHex(todoItem?.hexColor ?? "#FFFFFF") ?? .white
+        todoItemCategory = todoItem?.category ?? TodoItem.Category(
+            name: AppConstant.TodoItemCategory.otherName,
+            hexColor: AppConstant.TodoItemCategory.otherHexColor
+        )
+        
+        getTodoItemCategories()
     }
     
     // MARK: - Internal Methods
@@ -53,7 +64,8 @@ final class TodoDetailViewModel: ObservableObject {
             isDone: todoItem.isDone,
             creationDate: todoItem.creationDate,
             modifyDate: modifyDate,
-            hexColor: todoItemHexColorValue
+            hexColor: todoItemHexColorValue,
+            category: todoItemCategory
         )
         
         todoItem = updatedItem
@@ -61,7 +73,23 @@ final class TodoDetailViewModel: ObservableObject {
         dataService.addNewOrUpdate(updatedItem)
     }
     
+    func addNewTodoItemCategory(with name: String, and hexColor: String) {
+        let newCategory = TodoItem.Category(name: name, hexColor: hexColor)
+        dataService.addNewTodoItemCategory(newCategory)
+    }
+    
     func deleteTodoItem() {
         dataService.delete(todoItem)
+    }
+}
+
+// MARK: - Private Extension
+private extension TodoDetailViewModel {
+    func getTodoItemCategories() {
+        dataService.todoItemCategories
+            .sink { [weak self] todoItemCategories in
+                self?.todoItemCategories = todoItemCategories
+            }
+            .store(in: &subscriptions)
     }
 }
