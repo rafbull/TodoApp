@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct TodoListHeaderView: View {
+    // MARK: - Internal Properties
     let isDoneCount: Int
     @Binding var showIsDoneItems: Bool
     @Binding var sortTodoItems: Bool

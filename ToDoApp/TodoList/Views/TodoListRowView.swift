@@ -74,14 +74,16 @@ struct TodoListRowView_Previews: PreviewProvider {
         importance: .important,
         deadline: nil,
         isDone: true,
-        modifyDate: nil
+        modifyDate: nil,
+        category: nil
     )
     static let secondTodoItem = TodoItem(
         text: "Second text",
         importance: .important,
         deadline: nil,
         isDone: false,
-        modifyDate: nil
+        modifyDate: nil,
+        category: nil
     )
     
     static var previews: some View {
