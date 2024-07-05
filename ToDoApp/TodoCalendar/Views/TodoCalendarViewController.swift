@@ -58,8 +58,8 @@ extension TodoCalendarViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didEndDisplaying cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         guard let indexPath = tableView.indexPathsForVisibleRows?.first  else { return }
-        let topSection = indexPath.section
-        viewModel.tableViewWillDisplayHeaderView(for: topSection)
+        let topSection = indexPath.section == 0 ? indexPath.section : indexPath.section + 1
+        viewModel.didEndDisplaying(for: topSection)
     }
     
     func tableView(_ tableView: UITableView, leadingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {

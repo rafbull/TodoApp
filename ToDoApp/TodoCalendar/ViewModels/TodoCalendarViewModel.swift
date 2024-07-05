@@ -84,7 +84,7 @@ final class TodoCalendarViewModel: TodoCalendarViewModelProtocol {
         uniqueDates[section]
     }
     
-    func tableViewWillDisplayHeaderView(for section: Int) {
+    func didEndDisplaying(for section: Int) {
         guard section < uniqueDates.count else { return }
         dateSelectedIndex.send(section)
     }

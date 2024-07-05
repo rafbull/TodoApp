@@ -19,7 +19,7 @@ protocol TodoCalendarViewModelTableViewProtocol {
     func getTodoItemModel(with indexPath: IndexPath) -> TodoCalendarModel?
     func getTableViewHeaderTitleForSection(_ section: Int) -> String
     
-    func tableViewWillDisplayHeaderView(for section: Int)
+    func didEndDisplaying(for section: Int)
     
     func didSwipe(at indexPath: IndexPath, isLeading: Bool)
     func didSelectRowAt(at indexPath: IndexPath)

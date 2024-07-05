@@ -93,13 +93,6 @@ struct TodoDetailView: View {
             TextEditor(text: $textEditorText)
                 .focused($textEditorIsFocused)
                 .frame(minHeight: UIConstant.textEditorMinHeight)
-//                .toolbar {
-//                    ToolbarItem(placement: .keyboard) {
-//                        Button("Скрыть") {
-//                            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-//                        }
-//                    }
-//                }
             if textEditorText.isEmpty {
                 Text(UIConstant.placeholder)
                     .foregroundColor(Color(.placeholderText))
