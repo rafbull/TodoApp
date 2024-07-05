@@ -19,6 +19,7 @@ class ToDoAppTests: XCTestCase {
         let creationDate = Date(timeIntervalSince1970: 500)
         let modifyDate = Date(timeIntervalSince1970: 1500)
         let hexColor = "#FF5733"
+        let category = TodoItem.Category(name: "Работа", hexColor: "#0000FF")
 
         let todoItem = TodoItem(
             id: id,
@@ -28,7 +29,8 @@ class ToDoAppTests: XCTestCase {
             isDone: isDone,
             creationDate: creationDate,
             modifyDate: modifyDate,
-            hexColor: hexColor
+            hexColor: hexColor,
+            category: category
         )
 
         XCTAssertEqual(todoItem.id, id)
@@ -39,6 +41,7 @@ class ToDoAppTests: XCTestCase {
         XCTAssertEqual(todoItem.creationDate, creationDate)
         XCTAssertEqual(todoItem.modifyDate, modifyDate)
         XCTAssertEqual(todoItem.hexColor, hexColor)
+        XCTAssertEqual(todoItem.category, category)
     }
 
     func testTodoItemJSONSerialization() {
@@ -50,7 +53,8 @@ class ToDoAppTests: XCTestCase {
             isDone: true,
             creationDate: Date(timeIntervalSince1970: 500),
             modifyDate: Date(timeIntervalSince1970: 1500),
-            hexColor: "#FF5733"
+            hexColor: "#FF5733",
+            category: TodoItem.Category(name: "Работа", hexColor: "#0000FF")
         )
 
         let json = todoItem.json as? [String: Any]
@@ -63,6 +67,12 @@ class ToDoAppTests: XCTestCase {
         XCTAssertEqual(json?["creationDate"] as? TimeInterval, 500)
         XCTAssertEqual(json?["modifyDate"] as? TimeInterval, 1500)
         XCTAssertEqual(json?["hexColor"] as? String, "#FF5733")
+        if let category = json?["category"] as? [String: Any] {
+            XCTAssertEqual(category["name"] as? String, "Работа")
+            XCTAssertEqual(category["hexColor"] as? String, "#0000FF")
+        } else {
+            XCTFail("Category should not be nil")
+        }
     }
 
     func testTodoItemJSONDeserialization() {
@@ -74,7 +84,11 @@ class ToDoAppTests: XCTestCase {
             "isDone": true,
             "creationDate": 500.0,
             "modifyDate": 1500.0,
-            "hexColor": "#FF5733"
+            "hexColor": "#FF5733",
+            "category": [
+                "name": "Работа",
+                "hexColor": "#0000FF"
+            ]
         ]
 
         let todoItem = TodoItem.parse(json: json)
@@ -87,6 +101,7 @@ class ToDoAppTests: XCTestCase {
         XCTAssertEqual(todoItem?.creationDate, Date(timeIntervalSince1970: 500))
         XCTAssertEqual(todoItem?.modifyDate, Date(timeIntervalSince1970: 1500))
         XCTAssertEqual(todoItem?.hexColor, "#FF5733")
+        XCTAssertEqual(todoItem?.category, TodoItem.Category(name: "Работа", hexColor: "#0000FF"))
     }
 
     func testTodoItemCSVSerialization() {
@@ -98,16 +113,17 @@ class ToDoAppTests: XCTestCase {
             isDone: true,
             creationDate: Date(timeIntervalSince1970: 500),
             modifyDate: Date(timeIntervalSince1970: 1500),
-            hexColor: "#FF5733"
+            hexColor: "#FF5733",
+            category: TodoItem.Category(name: "Работа", hexColor: "#0000FF")
         )
 
         let csv = todoItem.csv as? String
-        let expectedCSV = "testID,\"Test Todo\",important,1000.0,true,500.0,1500.0,#FF5733"
+        let expectedCSV = "testID,\"Test Todo\",important,1000.0,true,500.0,1500.0,#FF5733,Работа,#0000FF"
         XCTAssertEqual(csv, expectedCSV)
     }
 
     func testTodoItemCSVDeserialization() {
-        let csv = "testID,\"Test Todo\",important,1000.0,true,500.0,1500.0,#FF5733"
+        let csv = "testID,\"Test Todo\",important,1000.0,true,500.0,1500.0,#FF5733,Работа,#0000FF"
         let todoItem = TodoItem.parse(csv: csv)
 
         XCTAssertNotNil(todoItem)
@@ -119,5 +135,6 @@ class ToDoAppTests: XCTestCase {
         XCTAssertEqual(todoItem?.creationDate, Date(timeIntervalSince1970: 500))
         XCTAssertEqual(todoItem?.modifyDate, Date(timeIntervalSince1970: 1500))
         XCTAssertEqual(todoItem?.hexColor, "#FF5733")
+        XCTAssertEqual(todoItem?.category, TodoItem.Category(name: "Работа", hexColor: "#0000FF"))
     }
 }
