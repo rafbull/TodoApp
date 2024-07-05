@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct TodoItem: Identifiable {
+struct TodoItem: Identifiable, Hashable {
     let id: String
     let text: String
     let importance: Importance
@@ -16,11 +16,23 @@ struct TodoItem: Identifiable {
     let creationDate: Date
     let modifyDate: Date?
     let hexColor: String
+    let category: Category?
     
     enum Importance: String, CaseIterable {
         case unimportant
         case normal
         case important
+    }
+    
+    struct Category: Identifiable, Hashable {
+        let id = UUID().uuidString
+        let name: String
+        let hexColor: String?
+        
+        enum PropertyName: String {
+            case name
+            case hexColor
+        }
     }
     
     // MARK: - Initialization
@@ -32,7 +44,8 @@ struct TodoItem: Identifiable {
         isDone: Bool,
         creationDate: Date = Date(),
         modifyDate: Date?,
-        hexColor: String = "#FFFFFF"
+        hexColor: String = "#FFFFFF",
+        category: Category?
     ) {
         self.id = id
         self.text = text
@@ -42,6 +55,7 @@ struct TodoItem: Identifiable {
         self.creationDate = creationDate
         self.modifyDate = modifyDate
         self.hexColor = hexColor
+        self.category = category
     }
 }
 
@@ -79,6 +93,13 @@ extension TodoItem {
             dictionary[PropertyName.modifyDate.rawValue] = modifyDate.timeIntervalSince1970
         }
         
+        if let category = category {
+            dictionary[PropertyName.category.rawValue] = [
+                Category.PropertyName.name.rawValue: category.name,
+                Category.PropertyName.hexColor.rawValue: category.hexColor
+            ]
+        }
+        
         return dictionary
     }
 }
@@ -88,7 +109,7 @@ extension TodoItem {
     static func parse(csv: Any) -> TodoItem? {
         guard let csvString = csv as? String else { return nil }
         let components = parseCSVLine(csvString)
-        guard components.count == PropertyName.allCases.count else { return nil }
+        guard components.count >= PropertyName.allCases.count else { return nil }
         
         let id = components[0]
         let text = components[1]
@@ -98,6 +119,15 @@ extension TodoItem {
         let creationDate = Date(timeIntervalSince1970: TimeInterval(components[5]) ?? 0)
         let modifyDate = TimeInterval(components[6]).flatMap { Date(timeIntervalSince1970: $0) }
         let hexColor = components[7]
+        let categoryName = components[8]
+        let categoryHexColor = components[9]
+        
+        let category: Category?
+        if !categoryName.isEmpty && !categoryHexColor.isEmpty {
+            category = Category(name: categoryName, hexColor: categoryHexColor)
+        } else {
+            category = nil
+        }
         
         return TodoItem(
             id: id,
@@ -107,7 +137,8 @@ extension TodoItem {
             isDone: isDone,
             creationDate: creationDate,
             modifyDate: modifyDate,
-            hexColor: hexColor
+            hexColor: hexColor,
+            category: category
         )
     }
     
@@ -120,7 +151,12 @@ extension TodoItem {
         } else {
             csvString += ","
         }
-        csvString += ",\(hexColor)"
+        csvString += ",\(hexColor),"
+        if let category = category {
+            csvString += "\(category.name),\(category.hexColor ?? "")"
+        } else {
+            csvString += ","
+        }
         return csvString
     }
 }
@@ -139,63 +175,39 @@ private extension TodoItem {
     }
     
     static func convertFrom(dictionary: [String: Any]) -> TodoItem? {
-        var id: String?
-        var text: String?
-        var importance: Importance?
-        var deadline: Date?
-        var isDone: Bool?
-        var creationDate: Date?
-        var modifyDate: Date?
-        var hexColor: String?
-        
-        PropertyName.allCases.forEach {
-            switch $0 {
-            case .id:
-                id = dictionary[$0.rawValue] as? String
-            case .text:
-                text = dictionary[$0.rawValue] as? String
-            case .importance:
-                if let rawValue = dictionary[$0.rawValue] as? String {
-                    importance = .init(rawValue: rawValue)
-                } else {
-                    importance = .normal
-                }
-            case .deadline:
-                if let timeInterval = dictionary[$0.rawValue] as? TimeInterval {
-                    deadline = .init(timeIntervalSince1970: timeInterval)
-                }
-            case .isDone:
-                isDone = dictionary[$0.rawValue] as? Bool
-            case .creationDate:
-                if let timeInterval = dictionary[$0.rawValue] as? TimeInterval {
-                    creationDate = .init(timeIntervalSince1970: timeInterval)
-                }
-            case .modifyDate:
-                if let timeInterval = dictionary[$0.rawValue] as? TimeInterval {
-                    modifyDate = .init(timeIntervalSince1970: timeInterval)
-                }
-            case .hexColor:
-                hexColor = dictionary[$0.rawValue] as? String
-            }
-        }
-        
-        guard let id = id,
-              let text = text,
-              let importance = importance,
-              let isDone = isDone,
-              let creationDate = creationDate,
-              let hexColor = hexColor
+        guard let id = dictionary[PropertyName.id.rawValue] as? String,
+              let text = dictionary[PropertyName.text.rawValue] as? String,
+              let isDone = dictionary[PropertyName.isDone.rawValue] as? Bool,
+              let creationDateInterval = dictionary[PropertyName.creationDate.rawValue] as? TimeInterval,
+              let hexColor = dictionary[PropertyName.hexColor.rawValue] as? String
         else { return nil }
+
+        let importance = (dictionary[PropertyName.importance.rawValue] as? String)
+            .flatMap { Importance(rawValue: $0) } ?? .normal
+        let deadline = (dictionary[PropertyName.deadline.rawValue] as? TimeInterval)
+            .flatMap { Date(timeIntervalSince1970: $0) }
+        let modifyDate = (dictionary[PropertyName.modifyDate.rawValue] as? TimeInterval)
+            .flatMap { Date(timeIntervalSince1970: $0) }
         
+        let category: Category?
+        if let categoryDict = dictionary[PropertyName.category.rawValue] as? [String: Any],
+           let categoryName = categoryDict[Category.PropertyName.name.rawValue] as? String,
+           let categoryHexColor = categoryDict[Category.PropertyName.hexColor.rawValue] as? String {
+            category = Category(name: categoryName, hexColor: categoryHexColor)
+        } else {
+            category = nil
+        }
+
         return TodoItem(
             id: id,
             text: text,
             importance: importance,
             deadline: deadline,
             isDone: isDone,
-            creationDate: creationDate,
+            creationDate: Date(timeIntervalSince1970: creationDateInterval),
             modifyDate: modifyDate,
-            hexColor: hexColor
+            hexColor: hexColor,
+            category: category
         )
     }
     
@@ -229,5 +241,6 @@ private extension TodoItem {
         case creationDate
         case modifyDate
         case hexColor
+        case category
     }
 }

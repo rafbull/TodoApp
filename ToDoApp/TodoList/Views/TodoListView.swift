@@ -10,14 +10,12 @@ import SwiftUI
 struct TodoListView: View {
     // MARK: - Internal Properties
     @StateObject var viewModel: TodoListViewModel
-    @State var showModalEmptyItem = false
-    @State var showIsDoneItems = false
-    @State var sortTodoItems = true
-    @State var selectedTodoItem: TodoItem?
-    @State var didTapSave = false
-    @State var didTapDelete = false
-    @State var didTapCheckBoxButton = false
-    @State var textFieldText = ""
+    @State private var showModalEmptyItem = false
+    @State private var showIsDoneItems = false
+    @State private var sortTodoItems = true
+    @State private var selectedTodoItem: TodoItem?
+    @State private var didTapCheckBoxButton = false
+    @State private var textFieldText = ""
     
     // MARK: - Private Constants
     private enum UIConstant {
@@ -36,14 +34,9 @@ struct TodoListView: View {
                 .frame(maxHeight: .infinity, alignment: .bottom)
                 .sheet(isPresented: $showModalEmptyItem) {
                     TodoDetailView(
-                        viewModel: TodoDetailViewModel(todoItem: nil, dataService: viewModel.dataService),
-                        didTapSave: $didTapSave,
-                        didTapDelete: $didTapDelete
+                        viewModel: TodoDetailViewModel(todoItem: nil, dataService: viewModel.dataService)
                     )
                 }
-        }
-        .onChange(of: [didTapSave, didTapDelete]) { _ in
-            viewModel.viewIsOnAppear()
         }
     }
 }
@@ -65,6 +58,7 @@ private extension TodoListView {
                 todoItemsSection
             }
             .navigationTitle(UIConstant.title)
+            .navigationBarItems(leading: showCalendarButton)
             .onAppear {
                 UITableView.appearance().backgroundColor = UIColor(AppColor.primaryBackground)
             }
@@ -74,8 +68,6 @@ private extension TodoListView {
         .sheet(item: $selectedTodoItem) { item in
             TodoDetailView(
                 viewModel: TodoDetailViewModel(todoItem: item, dataService: viewModel.dataService),
-                didTapSave: $didTapSave,
-                didTapDelete: $didTapDelete,
                 textEditorText: item.text
             )
         }
@@ -105,7 +97,6 @@ private extension TodoListView {
                 Text("Новое")
                     .font(AppFont.body)
                     .foregroundColor(AppColor.tertiaryLabel)
-                
             }
             .submitLabel(.done)
             .onSubmit {
@@ -140,6 +131,17 @@ private extension TodoListView {
                 .background(AppColor.blue)
                 .clipShape(Capsule())
                 .shadow(radius: UIConstant.addTodoItemShadowRadius)
+        }
+    }
+    
+    var showCalendarButton: some View {
+        NavigationLink {
+            TodoCalendarViewControllerRepresentable(dataService: viewModel.dataService)
+                .ignoresSafeArea()
+                .navigationBarTitleDisplayMode(.inline)
+                .navigationTitle(UIConstant.title)
+        } label: {
+            Image(systemName: "calendar")
         }
     }
 

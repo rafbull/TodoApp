@@ -6,66 +6,140 @@
 //
 
 import Foundation
+import Combine
 
 protocol DataServiceProtocol {
-    func getTodoItems(completion: ([TodoItem]) -> Void)
+    var todoItems: CurrentValueSubject <[TodoItem], Never> { get }
+    var todoItemCategories: CurrentValueSubject <[TodoItem.Category], Never> { get }
+    
     func addNewOrUpdate(_ todoItem: TodoItem)
     func delete(_ todoItem: TodoItem)
+    
+    func addNewTodoItemCategory(_ category: TodoItem.Category)
 }
 
 final class DataService: DataServiceProtocol {
     // MARK: - Private Properties
-    private var todoItems = [TodoItem]()
+    private(set) var todoItems = CurrentValueSubject <[TodoItem], Never>([])
+    private(set) var todoItemCategories = CurrentValueSubject <[TodoItem.Category], Never>([])
     
     // MARK: - Initialization
     init() {
         createMockData()
+        createTodoItemCategories()
     }
     
     // MARK: - Internal Methods
-    func getTodoItems(completion: ([TodoItem]) -> Void) {
-        completion(todoItems)
-    }
-    
     func addNewOrUpdate(_ todoItem: TodoItem) {
-        if let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) {
-            todoItems[index] = todoItem
+        if let index = todoItems.value.firstIndex(where: { $0.id == todoItem.id }) {
+            todoItems.value[index] = todoItem
         } else {
-            todoItems.append(todoItem)
+            todoItems.value.append(todoItem)
         }
     }
     
     func delete(_ todoItem: TodoItem) {
-        guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else { return }
-        todoItems.remove(at: index)
+        guard let index = todoItems.value.firstIndex(where: { $0.id == todoItem.id }) else { return }
+        todoItems.value.remove(at: index)
+    }
+    
+    func addNewTodoItemCategory(_ category: TodoItem.Category) {
+        if todoItemCategories.value.count > 1 {
+            todoItemCategories.value.insert(category, at: todoItemCategories.value.count - 1)
+        } else {
+            todoItemCategories.value.append(category)
+        }
     }
 }
 
 // MARK: - Private Extension
 private extension DataService {
     func createMockData() {
-        todoItems = [
+        todoItems.send([
             .init(
                 text: "1_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
                 importance: .important,
-                deadline: .now + 42 * 60 * 60,
+                deadline: .now + 48 * 60 * 60,
                 isDone: false,
-                modifyDate: nil
+                modifyDate: nil,
+                category: .init(
+                    name: AppConstant.TodoItemCategory.workName,
+                    hexColor: AppConstant.TodoItemCategory.workHexColor
+                )
             ),
             .init(
                 text: "2_Second",
                 importance: .normal,
-                deadline: nil,
+                deadline: .now + 48 * 60 * 60,
                 isDone: true,
-                modifyDate: nil
+                modifyDate: nil,
+                category: .init(
+                    name: AppConstant.TodoItemCategory.workName,
+                    hexColor: AppConstant.TodoItemCategory.workHexColor
+                )
             ),
             .init(
                 text: "3_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
                 importance: .unimportant,
                 deadline: nil,
                 isDone: false,
-                modifyDate: nil
+                modifyDate: nil,
+                category: .init(
+                    name: AppConstant.TodoItemCategory.studyName,
+                    hexColor: AppConstant.TodoItemCategory.studyHexColor
+                )
+            ),
+            .init(
+                text: "4_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
+                importance: .unimportant,
+                deadline: .now + 72 * 60 * 60,
+                isDone: false,
+                modifyDate: nil,
+                category: .init(
+                    name: AppConstant.TodoItemCategory.hobbyName,
+                    hexColor: AppConstant.TodoItemCategory.hobbyHexColor
+                )
+            ),
+            .init(
+                text: "5_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
+                importance: .unimportant,
+                deadline: .now + 172 * 60 * 60,
+                isDone: false,
+                modifyDate: nil,
+                category: .init(
+                    name: AppConstant.TodoItemCategory.studyName,
+                    hexColor: AppConstant.TodoItemCategory.studyHexColor
+                )
+            ),
+            .init(
+                text: "6_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
+                importance: .unimportant,
+                deadline: .now + 48 * 60 * 60,
+                isDone: false,
+                modifyDate: nil,
+                category: nil
             )
-        ]
+        ])
+        
+        (1...10).forEach { index in
+            let newTodoItem = TodoItem(
+                text: "New \(index)_Купить что-то",
+                importance: .unimportant,
+                deadline: .now + (48 * 60 * 60 * TimeInterval(index)),
+                isDone: false,
+                modifyDate: nil,
+                category: nil
+            )
+            todoItems.value.append(newTodoItem)
+        }
+    }
+    
+    func createTodoItemCategories() {
+        todoItemCategories.send([
+            .init(name: AppConstant.TodoItemCategory.workName, hexColor: AppConstant.TodoItemCategory.workHexColor),
+            .init(name: AppConstant.TodoItemCategory.studyName, hexColor: AppConstant.TodoItemCategory.studyHexColor),
+            .init(name: AppConstant.TodoItemCategory.hobbyName, hexColor: AppConstant.TodoItemCategory.hobbyHexColor),
+            .init(name: AppConstant.TodoItemCategory.otherName, hexColor: AppConstant.TodoItemCategory.otherHexColor),
+        ])
     }
 }

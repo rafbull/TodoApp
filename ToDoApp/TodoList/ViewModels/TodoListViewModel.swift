@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import Combine
 
 final class TodoListViewModel: ObservableObject {
     // MARK: - Internal Properties
@@ -34,6 +35,9 @@ final class TodoListViewModel: ObservableObject {
     
     let dataService: DataServiceProtocol
     
+    // MARK: - Private Properties
+    private var subscriptions = Set<AnyCancellable>()
+    
     // MARK: - Initialization
     init(dataService: DataServiceProtocol) {
         self.dataService = dataService
@@ -49,7 +53,8 @@ final class TodoListViewModel: ObservableObject {
             deadline: todoItem.deadline,
             isDone: isDone,
             creationDate: todoItem.creationDate,
-            modifyDate: todoItem.modifyDate
+            modifyDate: todoItem.modifyDate,
+            category: todoItem.category
         )
         
         guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else { return }
@@ -58,13 +63,13 @@ final class TodoListViewModel: ObservableObject {
     }
     
     func addNewItem(with text: String) {
-        
         let newItem = TodoItem(
             text: text,
             importance: .normal,
             deadline: nil,
             isDone: false,
-            modifyDate: nil
+            modifyDate: nil,
+            category: nil
         )
         todoItems.append(newItem)
         dataService.addNewOrUpdate(newItem)
@@ -84,9 +89,11 @@ final class TodoListViewModel: ObservableObject {
 // MARK: - Private Extension
 private extension TodoListViewModel {
     func getTodoItems() {
-        dataService.getTodoItems { [weak self] todoItems in
-            self?.todoItems = todoItems
-        }
+        dataService.todoItems
+            .sink { [weak self] todoItems in
+                self?.todoItems = todoItems
+            }
+            .store(in: &subscriptions)
     }
     
     func updateIsDoneItemsCount() {
