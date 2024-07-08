@@ -10,15 +10,16 @@ import SwiftUI
 
 final class TodoCalendarRouter {
     // MARK: - Private Properties
-    private let navigationController: UINavigationController
+    private weak var navigationController: UINavigationController?
     
     // MARK: - Initialization
-    init(navigationController: UINavigationController) {
+    init(navigationController: UINavigationController?) {
         self.navigationController = navigationController
     }
     
     // MARK: - Internal Methods
     func showTodoItemDetailView(with todoItem: TodoItem, dataService: DataServiceProtocol) {
+        guard let navigationController = navigationController else { return }
         let todoItemDetailView = TodoDetailView(
             viewModel: TodoDetailViewModel(todoItem: todoItem, dataService: dataService),
             textEditorText: todoItem.text
