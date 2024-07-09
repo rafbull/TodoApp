@@ -42,6 +42,8 @@
 		206B818B2C2F79BB0077F7A3 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B818A2C2F79BB0077F7A3 /* Color+Extension.swift */; };
 		20C5CEF22C2DC141000A1C1D /* TodoDetailSettingsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C5CEF12C2DC141000A1C1D /* TodoDetailSettingsSectionView.swift */; };
 		20D0A03A2C381C660050B1A2 /* AppConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D0A0392C381C660050B1A2 /* AppConstant.swift */; };
+		20E33D942C3DC2D00018B262 /* TodoItem+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E33D932C3DC2D00018B262 /* TodoItem+JSON.swift */; };
+		20E33D972C3DC3A70018B262 /* TodoItem+CSV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E33D962C3DC3A70018B262 /* TodoItem+CSV.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +102,8 @@
 		206B818A2C2F79BB0077F7A3 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		20C5CEF12C2DC141000A1C1D /* TodoDetailSettingsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDetailSettingsSectionView.swift; sourceTree = "<group>"; };
 		20D0A0392C381C660050B1A2 /* AppConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstant.swift; sourceTree = "<group>"; };
+		20E33D932C3DC2D00018B262 /* TodoItem+JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodoItem+JSON.swift"; sourceTree = "<group>"; };
+		20E33D962C3DC3A70018B262 /* TodoItem+CSV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodoItem+CSV.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -202,6 +206,8 @@
 			isa = PBXGroup;
 			children = (
 				202BB2CC2C25801C0061431C /* TodoItem.swift */,
+				20E33D932C3DC2D00018B262 /* TodoItem+JSON.swift */,
+				20E33D962C3DC3A70018B262 /* TodoItem+CSV.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -497,10 +503,12 @@
 				202DB0252C3462DA00F6E9A9 /* TodoCalendarModel.swift in Sources */,
 				206B81872C2F45F20077F7A3 /* DataService.swift in Sources */,
 				202DB0272C34687400F6E9A9 /* UIColor+Extension.swift in Sources */,
+				20E33D942C3DC2D00018B262 /* TodoItem+JSON.swift in Sources */,
 				202DB01C2C34552C00F6E9A9 /* TodoCalendarAssembly.swift in Sources */,
 				20365A272C2C6D0200697BD0 /* TodoDetailView.swift in Sources */,
 				202BB2CD2C25801C0061431C /* TodoItem.swift in Sources */,
 				203C03232C3587360075ABDE /* TodoCalendarCollectionViewDataSource.swift in Sources */,
+				20E33D972C3DC3A70018B262 /* TodoItem+CSV.swift in Sources */,
 				206B81852C2F05F20077F7A3 /* TodoDetailViewModel.swift in Sources */,
 				202DB0222C345EE500F6E9A9 /* TodoCalendarTableViewDataSource.swift in Sources */,
 				202DB00E2C34407D00F6E9A9 /* TodoCalendarViewController.swift in Sources */,
