@@ -42,6 +42,10 @@
 		206B818B2C2F79BB0077F7A3 /* Color+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B818A2C2F79BB0077F7A3 /* Color+Extension.swift */; };
 		20C5CEF22C2DC141000A1C1D /* TodoDetailSettingsSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20C5CEF12C2DC141000A1C1D /* TodoDetailSettingsSectionView.swift */; };
 		20D0A03A2C381C660050B1A2 /* AppConstant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20D0A0392C381C660050B1A2 /* AppConstant.swift */; };
+		20E2ECCE2C3E948F0095F60A /* CocoaLumberjack in Frameworks */ = {isa = PBXBuildFile; productRef = 20E2ECCD2C3E948F0095F60A /* CocoaLumberjack */; };
+		20E2ECD02C3E948F0095F60A /* CocoaLumberjackSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 20E2ECCF2C3E948F0095F60A /* CocoaLumberjackSwift */; };
+		20E2ECD22C3E948F0095F60A /* CocoaLumberjackSwiftLogBackend in Frameworks */ = {isa = PBXBuildFile; productRef = 20E2ECD12C3E948F0095F60A /* CocoaLumberjackSwiftLogBackend */; };
+		20E2ECD52C3EA76F0095F60A /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E2ECD42C3EA76F0095F60A /* Logger.swift */; };
 		20E33D942C3DC2D00018B262 /* TodoItem+JSON.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E33D932C3DC2D00018B262 /* TodoItem+JSON.swift */; };
 		20E33D972C3DC3A70018B262 /* TodoItem+CSV.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20E33D962C3DC3A70018B262 /* TodoItem+CSV.swift */; };
 /* End PBXBuildFile section */
@@ -102,6 +106,7 @@
 		206B818A2C2F79BB0077F7A3 /* Color+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extension.swift"; sourceTree = "<group>"; };
 		20C5CEF12C2DC141000A1C1D /* TodoDetailSettingsSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDetailSettingsSectionView.swift; sourceTree = "<group>"; };
 		20D0A0392C381C660050B1A2 /* AppConstant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConstant.swift; sourceTree = "<group>"; };
+		20E2ECD42C3EA76F0095F60A /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		20E33D932C3DC2D00018B262 /* TodoItem+JSON.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodoItem+JSON.swift"; sourceTree = "<group>"; };
 		20E33D962C3DC3A70018B262 /* TodoItem+CSV.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TodoItem+CSV.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -111,6 +116,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20E2ECD02C3E948F0095F60A /* CocoaLumberjackSwift in Frameworks */,
+				20E2ECD22C3E948F0095F60A /* CocoaLumberjackSwiftLogBackend in Frameworks */,
+				20E2ECCE2C3E948F0095F60A /* CocoaLumberjack in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -154,6 +162,7 @@
 		202BB29F2C257DD80061431C /* ToDoApp */ = {
 			isa = PBXGroup;
 			children = (
+				20E2ECD32C3EA7300095F60A /* Logger */,
 				202BB2A02C257DD80061431C /* ToDoAppApp.swift */,
 				20365A222C2C4B8000697BD0 /* Extensions */,
 				20365A1D2C2C4B0A00697BD0 /* Resources */,
@@ -369,6 +378,14 @@
 			path = ViewModels;
 			sourceTree = "<group>";
 		};
+		20E2ECD32C3EA7300095F60A /* Logger */ = {
+			isa = PBXGroup;
+			children = (
+				20E2ECD42C3EA76F0095F60A /* Logger.swift */,
+			);
+			path = Logger;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -385,6 +402,11 @@
 			dependencies = (
 			);
 			name = ToDoApp;
+			packageProductDependencies = (
+				20E2ECCD2C3E948F0095F60A /* CocoaLumberjack */,
+				20E2ECCF2C3E948F0095F60A /* CocoaLumberjackSwift */,
+				20E2ECD12C3E948F0095F60A /* CocoaLumberjackSwiftLogBackend */,
+			);
 			productName = ToDoApp;
 			productReference = 202BB29D2C257DD80061431C /* ToDoApp.app */;
 			productType = "com.apple.product-type.application";
@@ -457,6 +479,9 @@
 				Base,
 			);
 			mainGroup = 202BB2942C257DD80061431C;
+			packageReferences = (
+				20E2ECCC2C3E948F0095F60A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */,
+			);
 			productRefGroup = 202BB29E2C257DD80061431C /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -500,6 +525,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				202BB2A32C257DD80061431C /* TodoListView.swift in Sources */,
+				20E2ECD52C3EA76F0095F60A /* Logger.swift in Sources */,
 				202DB0252C3462DA00F6E9A9 /* TodoCalendarModel.swift in Sources */,
 				206B81872C2F45F20077F7A3 /* DataService.swift in Sources */,
 				202DB0272C34687400F6E9A9 /* UIColor+Extension.swift in Sources */,
@@ -859,6 +885,35 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		20E2ECCC2C3E948F0095F60A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/CocoaLumberjack/CocoaLumberjack";
+			requirement = {
+				kind = exactVersion;
+				version = 3.8.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		20E2ECCD2C3E948F0095F60A /* CocoaLumberjack */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 20E2ECCC2C3E948F0095F60A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
+			productName = CocoaLumberjack;
+		};
+		20E2ECCF2C3E948F0095F60A /* CocoaLumberjackSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 20E2ECCC2C3E948F0095F60A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
+			productName = CocoaLumberjackSwift;
+		};
+		20E2ECD12C3E948F0095F60A /* CocoaLumberjackSwiftLogBackend */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 20E2ECCC2C3E948F0095F60A /* XCRemoteSwiftPackageReference "CocoaLumberjack" */;
+			productName = CocoaLumberjackSwiftLogBackend;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 202BB2952C257DD80061431C /* Project object */;
 }
