@@ -43,9 +43,12 @@ struct TodoDetailSettingsSectionView: View {
         datePickerSection
             .animation(.easeInOut, value: showAnimation)
     }
+}
 
-    // MARK: - Private Views
-    private var importancePickerRowView: some View {
+// MARK: - Private Extension
+private extension TodoDetailSettingsSectionView {
+    // MARK: Private Views
+    var importancePickerRowView: some View {
         HStack {
             Text("Важность")
                 .font(AppFont.body)
@@ -65,7 +68,7 @@ struct TodoDetailSettingsSectionView: View {
         }
     }
 
-    private var colorPickerRowView: some View {
+    var colorPickerRowView: some View {
         HStack {
             Text("Выбрать цвет")
                 .font(AppFont.body)
@@ -85,7 +88,7 @@ struct TodoDetailSettingsSectionView: View {
         }
     }
 
-    private var categoryPickerView: some View {
+    var categoryPickerView: some View {
         Group {
             HStack {
                 Text("Выбрать категорию")
@@ -140,13 +143,7 @@ struct TodoDetailSettingsSectionView: View {
                         }
                         .submitLabel(.done)
                         .onSubmit {
-                            viewModel.addNewTodoItemCategory(
-                                with: newCategoryName,
-                                and: selectedCategoryHexColorValue
-                            )
-                            newCategoryName = ""
-                            showAddNewCategory.toggle()
-                            showCategoryColorPicker.toggle()
+                            saveNewCategory()
                         }
                         Button(action: {
                             showCategoryColorPicker.toggle()
@@ -161,6 +158,11 @@ struct TodoDetailSettingsSectionView: View {
                         })
                     }
                 }
+                if !newCategoryName.isEmpty {
+                    Button("Сохранить категорию") {
+                        saveNewCategory()
+                    }
+                }
                 if showCategoryColorPicker {
                     SpectrumColorPickerView(
                         selectedColor: $selectedCategoryColor,
@@ -171,7 +173,7 @@ struct TodoDetailSettingsSectionView: View {
         }
     }
     
-    private var datePickerSection: some View {
+    var datePickerSection: some View {
         Group {
             HStack {
                 VStack(alignment: .leading) {
@@ -199,12 +201,23 @@ struct TodoDetailSettingsSectionView: View {
         }
     }
     
-    private var circleOverlayView: some View {
+    var circleOverlayView: some View {
         Circle()
             .stroke(
                 AppColor.separatorSupport,
                 lineWidth: UIConstant.colorPickerImageStrokeWidth
             )
+    }
+    
+    // MARK: Private Methods
+    func saveNewCategory() {
+        viewModel.addNewTodoItemCategory(
+            with: newCategoryName,
+            and: selectedCategoryHexColorValue
+        )
+        newCategoryName = ""
+        showAddNewCategory = false
+        showCategoryColorPicker = false
     }
 }
 
