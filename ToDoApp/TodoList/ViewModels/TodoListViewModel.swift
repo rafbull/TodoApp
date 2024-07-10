@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import CocoaLumberjackSwift
 
 final class TodoListViewModel: ObservableObject {
     // MARK: - Internal Properties
@@ -57,9 +58,13 @@ final class TodoListViewModel: ObservableObject {
             category: todoItem.category
         )
         
-        guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else { return }
+        guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else {
+            DDLogWarn("File: \(#fileID) Function: \(#function)\n\tTodoItem with id:\(updatedItem.id) is not found!")
+            return
+        }
         todoItems[index] = updatedItem
         dataService.addNewOrUpdate(updatedItem)
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tUpdate TodoItem with id:\(updatedItem.id). \"isDone\": \(updatedItem.isDone)")
     }
     
     func addNewItem(with text: String) {
@@ -76,9 +81,13 @@ final class TodoListViewModel: ObservableObject {
     }
     
     func delete(_ todoItem: TodoItem) {
-        guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else { return }
+        guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else {
+            DDLogWarn("File: \(#fileID) Function: \(#function)\n\tTodoItem with id:\(todoItem.id) is not found!")
+            return
+        }
         todoItems.remove(at: index)
         dataService.delete(todoItem)
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tDelete TodoItem with id:\(todoItem.id).")
     }
     
     func viewIsOnAppear() {

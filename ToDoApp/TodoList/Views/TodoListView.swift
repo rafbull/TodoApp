@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CocoaLumberjackSwift
 
 struct TodoListView: View {
     // MARK: - Internal Properties
@@ -37,6 +38,12 @@ struct TodoListView: View {
                         viewModel: TodoDetailViewModel(todoItem: nil, dataService: viewModel.dataService)
                     )
                 }
+        }
+        .onAppear() {
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoListView Appears")
+        }
+        .onDisappear() {
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoListView Disappear")
         }
     }
 }

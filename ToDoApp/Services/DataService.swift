@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import CocoaLumberjackSwift
 
 protocol DataServiceProtocol {
     var todoItems: CurrentValueSubject <[TodoItem], Never> { get }
@@ -33,14 +34,20 @@ final class DataService: DataServiceProtocol {
     func addNewOrUpdate(_ todoItem: TodoItem) {
         if let index = todoItems.value.firstIndex(where: { $0.id == todoItem.id }) {
             todoItems.value[index] = todoItem
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tUpdate TodoItem with id:\(todoItem.id).")
         } else {
             todoItems.value.append(todoItem)
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tAdd new TodoItem with id:\(todoItem.id).")
         }
     }
     
     func delete(_ todoItem: TodoItem) {
-        guard let index = todoItems.value.firstIndex(where: { $0.id == todoItem.id }) else { return }
+        guard let index = todoItems.value.firstIndex(where: { $0.id == todoItem.id }) else {
+            DDLogWarn("File: \(#fileID) Function: \(#function)\n\tTodoItem with id:\(todoItem.id) is not found!")
+            return
+        }
         todoItems.value.remove(at: index)
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tDelete TodoItem with id:\(todoItem.id).")
     }
     
     func addNewTodoItemCategory(_ category: TodoItem.Category) {
@@ -49,6 +56,7 @@ final class DataService: DataServiceProtocol {
         } else {
             todoItemCategories.value.append(category)
         }
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tAdd new Category with id:\(category.id).")
     }
 }
 

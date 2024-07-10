@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import CocoaLumberjackSwift
 
 struct TodoDetailView: View {
     // MARK: - Internal Properties
@@ -79,11 +80,11 @@ struct TodoDetailView: View {
 //                    textEditorIsFocused = false
 //                }
 //        )
-        .onAppear {
-            addKeyboardNotification()
+        .onAppear() {
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoDetailView Appears")
         }
-        .onDisappear {
-            removeKeyboardNotification()
+        .onDisappear() {
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoDetailView Disappear")
         }
     }
     
@@ -111,33 +112,6 @@ struct TodoDetailView: View {
         .frame(maxWidth: .infinity)
         .foregroundColor(textEditorText.isEmpty ? AppColor.tertiaryLabel : AppColor.red)
         .disabled(textEditorText.isEmpty)
-    }
-
-    
-}
-
-// MARK: - Private Extension
-private extension TodoDetailView {
-    func addKeyboardNotification() {
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillShowNotification, object: nil, queue: .main) { (notification) in
-            if let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
-                if let window = UIApplication.shared.connectedScenes
-                    .compactMap({ $0 as? UIWindowScene })
-                    .first?.windows
-                    .first {
-                    keyboardHeight = keyboardFrame.height - window.safeAreaInsets.bottom
-                }
-            }
-        }
-        
-        NotificationCenter.default.addObserver(forName: UIResponder.keyboardWillHideNotification, object: nil, queue: .main) { _ in
-            keyboardHeight = 0
-        }
-    }
-    
-    func removeKeyboardNotification() {
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillShowNotification, object: nil)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
 }
 
