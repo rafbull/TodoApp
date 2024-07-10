@@ -26,8 +26,7 @@ final class TodoListViewModel: ObservableObject {
     var sortedByImportance: [TodoItem] {
         todoItems.sorted { lhs, rhs in
             if let lhsIndex = TodoItem.Importance.allCases.firstIndex(of: lhs.importance),
-               let rhsIndex = TodoItem.Importance.allCases.firstIndex(of: rhs.importance)
-            {
+               let rhsIndex = TodoItem.Importance.allCases.firstIndex(of: rhs.importance) {
                 return lhsIndex > rhsIndex
             }
             return false

@@ -80,10 +80,10 @@ struct TodoDetailView: View {
 //                    textEditorIsFocused = false
 //                }
 //        )
-        .onAppear() {
+        .onAppear {
             DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoDetailView Appears")
         }
-        .onDisappear() {
+        .onDisappear {
             DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoDetailView Disappear")
         }
     }

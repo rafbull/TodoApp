@@ -9,7 +9,7 @@ import UIKit
 
 final class TodoCalendarTableViewDataSource: NSObject, UITableViewDataSource {
     // MARK: - Private Properties
-    private let viewModel: TodoCalendarViewModelTableViewProtocol
+    private let viewModel: TodoCalendarTableViewModelProtocol
     
     // MARK: - Initialization
     init(_ viewModel: TodoCalendarViewModelProtocol) {

@@ -43,9 +43,9 @@ extension TodoItem {
         
         if let category = category {
             dictionary[PropertyName.category.rawValue] = [
-                Category.PropertyName.id.rawValue: category.id,
-                Category.PropertyName.name.rawValue: category.name,
-                Category.PropertyName.hexColor.rawValue: category.hexColor
+                TodoItemCategory.PropertyName.id.rawValue: category.id,
+                TodoItemCategory.PropertyName.name.rawValue: category.name,
+                TodoItemCategory.PropertyName.hexColor.rawValue: category.hexColor
             ]
         }
         
@@ -81,12 +81,12 @@ private extension TodoItem {
         let modifyDate = (dictionary[PropertyName.modifyDate.rawValue] as? TimeInterval)
             .flatMap { Date(timeIntervalSince1970: $0) }
         
-        let category: Category?
+        let category: TodoItemCategory?
         if let categoryDict = dictionary[PropertyName.category.rawValue] as? [String: Any],
-           let categoryId = categoryDict[Category.PropertyName.id.rawValue] as? String,
-           let categoryName = categoryDict[Category.PropertyName.name.rawValue] as? String,
-           let categoryHexColor = categoryDict[Category.PropertyName.hexColor.rawValue] as? String {
-            category = Category(id: categoryId, name: categoryName, hexColor: categoryHexColor)
+           let categoryId = categoryDict[TodoItemCategory.PropertyName.id.rawValue] as? String,
+           let categoryName = categoryDict[TodoItemCategory.PropertyName.name.rawValue] as? String,
+           let categoryHexColor = categoryDict[TodoItemCategory.PropertyName.hexColor.rawValue] as? String {
+            category = TodoItemCategory(id: categoryId, name: categoryName, hexColor: categoryHexColor)
         } else {
             category = nil
         }

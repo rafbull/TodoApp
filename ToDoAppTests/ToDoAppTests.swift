@@ -19,7 +19,7 @@ class ToDoAppTests: XCTestCase {
         let creationDate = Date(timeIntervalSince1970: 500)
         let modifyDate = Date(timeIntervalSince1970: 1500)
         let hexColor = "#FF5733"
-        let category = TodoItem.Category(name: "Работа", hexColor: "#0000FF")
+        let category = TodoItemCategory(name: "Работа", hexColor: "#0000FF")
 
         let todoItem = TodoItem(
             id: id,
@@ -54,7 +54,7 @@ class ToDoAppTests: XCTestCase {
             creationDate: Date(timeIntervalSince1970: 500),
             modifyDate: Date(timeIntervalSince1970: 1500),
             hexColor: "#FF5733",
-            category: TodoItem.Category(name: "Работа", hexColor: "#0000FF")
+            category: TodoItemCategory(name: "Работа", hexColor: "#0000FF")
         )
 
         let json = todoItem.json as? [String: Any]
@@ -102,7 +102,7 @@ class ToDoAppTests: XCTestCase {
         XCTAssertEqual(todoItem?.creationDate, Date(timeIntervalSince1970: 500))
         XCTAssertEqual(todoItem?.modifyDate, Date(timeIntervalSince1970: 1500))
         XCTAssertEqual(todoItem?.hexColor, "#FF5733")
-        XCTAssertEqual(todoItem?.category, TodoItem.Category(id: "testCategoryID", name: "Работа", hexColor: "#0000FF"))
+        XCTAssertEqual(todoItem?.category, TodoItemCategory(id: "testCategoryID", name: "Работа", hexColor: "#0000FF"))
     }
 
     func testTodoItemCSVSerialization() {
@@ -115,7 +115,7 @@ class ToDoAppTests: XCTestCase {
             creationDate: Date(timeIntervalSince1970: 500),
             modifyDate: Date(timeIntervalSince1970: 1500),
             hexColor: "#FF5733",
-            category: TodoItem.Category(id: "testCategoryID", name: "Работа", hexColor: "#0000FF")
+            category: TodoItemCategory(id: "testCategoryID", name: "Работа", hexColor: "#0000FF")
         )
 
         let csv = todoItem.csv as? String
@@ -136,6 +136,6 @@ class ToDoAppTests: XCTestCase {
         XCTAssertEqual(todoItem?.creationDate, Date(timeIntervalSince1970: 500))
         XCTAssertEqual(todoItem?.modifyDate, Date(timeIntervalSince1970: 1500))
         XCTAssertEqual(todoItem?.hexColor, "#FF5733")
-        XCTAssertEqual(todoItem?.category, TodoItem.Category(id: "testCategoryID", name: "Работа", hexColor: "#0000FF"))
+        XCTAssertEqual(todoItem?.category, TodoItemCategory(id: "testCategoryID", name: "Работа", hexColor: "#0000FF"))
     }
 }

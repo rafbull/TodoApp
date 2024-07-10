@@ -39,10 +39,10 @@ struct TodoListView: View {
                     )
                 }
         }
-        .onAppear() {
+        .onAppear {
             DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoListView Appears")
         }
-        .onDisappear() {
+        .onDisappear {
             DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoListView Disappear")
         }
     }

@@ -100,4 +100,3 @@ struct TodoListRowView_Previews: PreviewProvider {
         .previewLayout(.sizeThatFits)
     }
 }
-

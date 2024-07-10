@@ -11,18 +11,18 @@ import CocoaLumberjackSwift
 
 protocol DataServiceProtocol {
     var todoItems: CurrentValueSubject <[TodoItem], Never> { get }
-    var todoItemCategories: CurrentValueSubject <[TodoItem.Category], Never> { get }
+    var todoItemCategories: CurrentValueSubject <[TodoItemCategory], Never> { get }
     
     func addNewOrUpdate(_ todoItem: TodoItem)
     func delete(_ todoItem: TodoItem)
     
-    func addNewTodoItemCategory(_ category: TodoItem.Category)
+    func addNewTodoItemCategory(_ category: TodoItemCategory)
 }
 
 final class DataService: DataServiceProtocol {
     // MARK: - Private Properties
     private(set) var todoItems = CurrentValueSubject <[TodoItem], Never>([])
-    private(set) var todoItemCategories = CurrentValueSubject <[TodoItem.Category], Never>([])
+    private(set) var todoItemCategories = CurrentValueSubject <[TodoItemCategory], Never>([])
     
     // MARK: - Initialization
     init() {
@@ -50,7 +50,7 @@ final class DataService: DataServiceProtocol {
         DDLogInfo("File: \(#fileID) Function: \(#function)\n\tDelete TodoItem with id:\(todoItem.id).")
     }
     
-    func addNewTodoItemCategory(_ category: TodoItem.Category) {
+    func addNewTodoItemCategory(_ category: TodoItemCategory) {
         if todoItemCategories.value.count > 1 {
             todoItemCategories.value.insert(category, at: todoItemCategories.value.count - 1)
         } else {
@@ -82,8 +82,8 @@ private extension DataService {
                 isDone: true,
                 modifyDate: nil,
                 category: .init(
-                    name: AppConstant.TodoItemCategory.workName,
-                    hexColor: AppConstant.TodoItemCategory.workHexColor
+                    name: AppConstant.TodoItemCategory.hobbyName,
+                    hexColor: AppConstant.TodoItemCategory.hobbyHexColor
                 )
             ),
             .init(
@@ -96,36 +96,6 @@ private extension DataService {
                     name: AppConstant.TodoItemCategory.studyName,
                     hexColor: AppConstant.TodoItemCategory.studyHexColor
                 )
-            ),
-            .init(
-                text: "4_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
-                importance: .unimportant,
-                deadline: .now + 72 * 60 * 60,
-                isDone: false,
-                modifyDate: nil,
-                category: .init(
-                    name: AppConstant.TodoItemCategory.hobbyName,
-                    hexColor: AppConstant.TodoItemCategory.hobbyHexColor
-                )
-            ),
-            .init(
-                text: "5_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
-                importance: .unimportant,
-                deadline: .now + 172 * 60 * 60,
-                isDone: false,
-                modifyDate: nil,
-                category: .init(
-                    name: AppConstant.TodoItemCategory.studyName,
-                    hexColor: AppConstant.TodoItemCategory.studyHexColor
-                )
-            ),
-            .init(
-                text: "6_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
-                importance: .unimportant,
-                deadline: .now + 48 * 60 * 60,
-                isDone: false,
-                modifyDate: nil,
-                category: nil
             )
         ])
         
@@ -147,7 +117,7 @@ private extension DataService {
             .init(name: AppConstant.TodoItemCategory.workName, hexColor: AppConstant.TodoItemCategory.workHexColor),
             .init(name: AppConstant.TodoItemCategory.studyName, hexColor: AppConstant.TodoItemCategory.studyHexColor),
             .init(name: AppConstant.TodoItemCategory.hobbyName, hexColor: AppConstant.TodoItemCategory.hobbyHexColor),
-            .init(name: AppConstant.TodoItemCategory.otherName, hexColor: AppConstant.TodoItemCategory.otherHexColor),
+            .init(name: AppConstant.TodoItemCategory.otherName, hexColor: AppConstant.TodoItemCategory.otherHexColor)
         ])
     }
 }

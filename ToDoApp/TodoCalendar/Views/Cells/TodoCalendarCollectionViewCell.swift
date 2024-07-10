@@ -91,7 +91,7 @@ private extension TodoCalendarCollectionViewCell {
             contentVStackView.topAnchor.constraint(equalTo: contentMargin.topAnchor),
             contentVStackView.leadingAnchor.constraint(equalTo: contentMargin.leadingAnchor),
             contentVStackView.trailingAnchor.constraint(equalTo: contentMargin.trailingAnchor),
-            contentVStackView.bottomAnchor.constraint(equalTo: contentMargin.bottomAnchor),
+            contentVStackView.bottomAnchor.constraint(equalTo: contentMargin.bottomAnchor)
         ])
     }
 }

@@ -8,9 +8,9 @@
 import Foundation
 import Combine
 
-typealias TodoCalendarViewModelProtocol = TodoCalendarViewModelTableViewProtocol & TodoCalendarViewModelCollectionViewProtocol
+typealias TodoCalendarViewModelProtocol = TodoCalendarTableViewModelProtocol & TodoCalendarCollectionViewModelProtocol
 
-protocol TodoCalendarViewModelTableViewProtocol {
+protocol TodoCalendarTableViewModelProtocol {
     var displayingSectionIndex: CurrentValueSubject<Int, Never> { get }
     var isDataChanged: CurrentValueSubject<Bool, Never> { get }
     
@@ -25,7 +25,7 @@ protocol TodoCalendarViewModelTableViewProtocol {
     func didSelectRowAt(at indexPath: IndexPath)
 }
 
-protocol TodoCalendarViewModelCollectionViewProtocol {
+protocol TodoCalendarCollectionViewModelProtocol {
     var dateSelectedIndex: CurrentValueSubject<Int, Never> { get }
     
     func getCollectionViewNumberOfItemsInSection() -> Int
