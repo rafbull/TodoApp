@@ -16,4 +16,8 @@ struct ToDoAppApp: App {
             TodoListView(viewModel: todoListViewModel)
         }
     }
+    
+    init() {
+        Logger.setupLogger()
+    }
 }
