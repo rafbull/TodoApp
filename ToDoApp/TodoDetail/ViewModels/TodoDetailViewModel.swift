@@ -74,6 +74,7 @@ final class TodoDetailViewModel: ObservableObject {
     }
     
     func addNewTodoItemCategory(with name: String, and hexColor: String) {
+        guard !name.isEmpty else { return }
         let newCategory = TodoItem.Category(name: name, hexColor: hexColor)
         dataService.addNewTodoItemCategory(newCategory)
     }
