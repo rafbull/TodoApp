@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import CocoaLumberjackSwift
+import ToDoAppFileCache
 
 protocol DataServiceProtocol {
     var todoItems: CurrentValueSubject <[TodoItem], Never> { get }
@@ -23,10 +24,11 @@ final class DataService: DataServiceProtocol {
     // MARK: - Private Properties
     private(set) var todoItems = CurrentValueSubject <[TodoItem], Never>([])
     private(set) var todoItemCategories = CurrentValueSubject <[TodoItemCategory], Never>([])
+    private lazy var fileCache = FileCache<TodoItem>()
     
     // MARK: - Initialization
     init() {
-        createMockData()
+        createData()
         createTodoItemCategories()
     }
     
@@ -39,6 +41,7 @@ final class DataService: DataServiceProtocol {
             todoItems.value.append(todoItem)
             DDLogInfo("File: \(#fileID) Function: \(#function)\n\tAdd new TodoItem with id:\(todoItem.id).")
         }
+        fileCache.addItem(todoItem)
     }
     
     func delete(_ todoItem: TodoItem) {
@@ -47,6 +50,7 @@ final class DataService: DataServiceProtocol {
             return
         }
         todoItems.value.remove(at: index)
+        fileCache.removeItem(by: todoItem.id)
         DDLogInfo("File: \(#fileID) Function: \(#function)\n\tDelete TodoItem with id:\(todoItem.id).")
     }
     
@@ -62,6 +66,16 @@ final class DataService: DataServiceProtocol {
 
 // MARK: - Private Extension
 private extension DataService {
+    func createData() {
+        guard fileCache.todoItems.isEmpty else {
+            getItemsFromFileCache()
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tGet TodoItems from FileCahce.")
+            return
+        }
+        createMockData()
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tCreate TodoItems MockData.")
+    }
+    
     func createMockData() {
         todoItems.send([
             .init(
@@ -119,5 +133,10 @@ private extension DataService {
             .init(name: AppConstant.TodoItemCategory.hobbyName, hexColor: AppConstant.TodoItemCategory.hobbyHexColor),
             .init(name: AppConstant.TodoItemCategory.otherName, hexColor: AppConstant.TodoItemCategory.otherHexColor)
         ])
+    }
+    
+    func getItemsFromFileCache() {
+        let cachedTodoItems = fileCache.todoItems.map { $0.1 }.sorted { $0.creationDate < $1.creationDate }
+        todoItems.send(cachedTodoItems)
     }
 }

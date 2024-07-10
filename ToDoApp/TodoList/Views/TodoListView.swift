@@ -107,6 +107,7 @@ private extension TodoListView {
             }
             .submitLabel(.done)
             .onSubmit {
+                guard !textFieldText.isEmpty else { return }
                 viewModel.addNewItem(with: textFieldText)
                 textFieldText = ""
             }

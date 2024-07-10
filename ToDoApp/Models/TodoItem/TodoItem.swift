@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import ToDoAppFileCache
 
-struct TodoItem: Identifiable, Hashable {
+struct TodoItem: Identifiable, Hashable, FileCachable {
     let id: String
     let text: String
     let importance: Importance
