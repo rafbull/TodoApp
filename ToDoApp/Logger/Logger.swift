@@ -14,7 +14,7 @@ final class Logger {
             DDLog.add(ddtyLogger)
         }
         DDLog.add(DDOSLogger.sharedInstance)
-        
+
         let fileLogger: DDFileLogger = DDFileLogger()
         fileLogger.rollingFrequency = TimeInterval(60*60*48)
         fileLogger.logFileManager.maximumNumberOfLogFiles = 7

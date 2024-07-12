@@ -36,6 +36,8 @@
 		203C03272C35E61D0075ABDE /* TodoCalendarViewModelProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 203C03262C35E61D0075ABDE /* TodoCalendarViewModelProtocol.swift */; };
 		205A7D772C3EC79400A06598 /* ToDoAppFileCache in Resources */ = {isa = PBXBuildFile; fileRef = 205A7D762C3EC79400A06598 /* ToDoAppFileCache */; };
 		205A7D7F2C3ED5DD00A06598 /* ToDoAppFileCache in Frameworks */ = {isa = PBXBuildFile; productRef = 205A7D7E2C3ED5DD00A06598 /* ToDoAppFileCache */; };
+		205A7D812C3EFAED00A06598 /* URLSession+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205A7D802C3EFAED00A06598 /* URLSession+Extension.swift */; };
+		205A7D842C40239300A06598 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 205A7D832C40239300A06598 /* NetworkService.swift */; };
 		206B81852C2F05F20077F7A3 /* TodoDetailViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B81842C2F05F10077F7A3 /* TodoDetailViewModel.swift */; };
 		206B81872C2F45F20077F7A3 /* DataService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B81862C2F45F20077F7A3 /* DataService.swift */; };
 		206B81892C2F74080077F7A3 /* SpectrumColorPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 206B81882C2F74080077F7A3 /* SpectrumColorPickerView.swift */; };
@@ -105,6 +107,8 @@
 		203C03222C3587360075ABDE /* TodoCalendarCollectionViewDataSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCalendarCollectionViewDataSource.swift; sourceTree = "<group>"; };
 		203C03262C35E61D0075ABDE /* TodoCalendarViewModelProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoCalendarViewModelProtocol.swift; sourceTree = "<group>"; };
 		205A7D762C3EC79400A06598 /* ToDoAppFileCache */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = ToDoAppFileCache; sourceTree = "<group>"; };
+		205A7D802C3EFAED00A06598 /* URLSession+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Extension.swift"; sourceTree = "<group>"; };
+		205A7D832C40239300A06598 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		206B81842C2F05F10077F7A3 /* TodoDetailViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodoDetailViewModel.swift; sourceTree = "<group>"; };
 		206B81862C2F45F20077F7A3 /* DataService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataService.swift; sourceTree = "<group>"; };
 		206B81882C2F74080077F7A3 /* SpectrumColorPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpectrumColorPickerView.swift; sourceTree = "<group>"; };
@@ -310,6 +314,7 @@
 			isa = PBXGroup;
 			children = (
 				206B81862C2F45F20077F7A3 /* DataService.swift */,
+				205A7D832C40239300A06598 /* NetworkService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -365,6 +370,7 @@
 			children = (
 				206B818A2C2F79BB0077F7A3 /* Color+Extension.swift */,
 				202DB0262C34687400F6E9A9 /* UIColor+Extension.swift */,
+				205A7D802C3EFAED00A06598 /* URLSession+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -680,6 +686,7 @@
 				202DB01F2C34571400F6E9A9 /* TodoCalendarRouter.swift in Sources */,
 				203C03212C35857F0075ABDE /* TodoCalendarCollectionViewCell.swift in Sources */,
 				20365A242C2C67F500697BD0 /* TodoListRowView.swift in Sources */,
+				205A7D842C40239300A06598 /* NetworkService.swift in Sources */,
 				202DB0122C34468E00F6E9A9 /* TodoCalendarViewControllerRepresentable.swift in Sources */,
 				202BB2A12C257DD80061431C /* ToDoAppApp.swift in Sources */,
 				20C5CEF22C2DC141000A1C1D /* TodoDetailSettingsSectionView.swift in Sources */,
@@ -690,6 +697,7 @@
 				20365A2B2C2CAA2F00697BD0 /* TodoListHeaderView.swift in Sources */,
 				20E2ECD82C3EBBFD0095F60A /* TodoItemCategory.swift in Sources */,
 				20D0A03A2C381C660050B1A2 /* AppConstant.swift in Sources */,
+				205A7D812C3EFAED00A06598 /* URLSession+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -863,6 +871,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rafbull.ToDoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -895,6 +904,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
+				OTHER_SWIFT_FLAGS = "";
 				PRODUCT_BUNDLE_IDENTIFIER = com.rafbull.ToDoApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
