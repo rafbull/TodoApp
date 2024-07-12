@@ -7,25 +7,28 @@
 
 import Foundation
 import Combine
+import CocoaLumberjackSwift
+import ToDoAppFileCache
 
 protocol DataServiceProtocol {
     var todoItems: CurrentValueSubject <[TodoItem], Never> { get }
-    var todoItemCategories: CurrentValueSubject <[TodoItem.Category], Never> { get }
+    var todoItemCategories: CurrentValueSubject <[TodoItemCategory], Never> { get }
     
     func addNewOrUpdate(_ todoItem: TodoItem)
     func delete(_ todoItem: TodoItem)
     
-    func addNewTodoItemCategory(_ category: TodoItem.Category)
+    func addNewTodoItemCategory(_ category: TodoItemCategory)
 }
 
 final class DataService: DataServiceProtocol {
     // MARK: - Private Properties
     private(set) var todoItems = CurrentValueSubject <[TodoItem], Never>([])
-    private(set) var todoItemCategories = CurrentValueSubject <[TodoItem.Category], Never>([])
+    private(set) var todoItemCategories = CurrentValueSubject <[TodoItemCategory], Never>([])
+    private lazy var fileCache = FileCache<TodoItem>()
     
     // MARK: - Initialization
     init() {
-        createMockData()
+        createData()
         createTodoItemCategories()
     }
     
@@ -33,27 +36,46 @@ final class DataService: DataServiceProtocol {
     func addNewOrUpdate(_ todoItem: TodoItem) {
         if let index = todoItems.value.firstIndex(where: { $0.id == todoItem.id }) {
             todoItems.value[index] = todoItem
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tUpdate TodoItem with id:\(todoItem.id).")
         } else {
             todoItems.value.append(todoItem)
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tAdd new TodoItem with id:\(todoItem.id).")
         }
+        fileCache.addItem(todoItem)
     }
     
     func delete(_ todoItem: TodoItem) {
-        guard let index = todoItems.value.firstIndex(where: { $0.id == todoItem.id }) else { return }
+        guard let index = todoItems.value.firstIndex(where: { $0.id == todoItem.id }) else {
+            DDLogWarn("File: \(#fileID) Function: \(#function)\n\tTodoItem with id:\(todoItem.id) is not found!")
+            return
+        }
         todoItems.value.remove(at: index)
+        fileCache.removeItem(by: todoItem.id)
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tDelete TodoItem with id:\(todoItem.id).")
     }
     
-    func addNewTodoItemCategory(_ category: TodoItem.Category) {
+    func addNewTodoItemCategory(_ category: TodoItemCategory) {
         if todoItemCategories.value.count > 1 {
             todoItemCategories.value.insert(category, at: todoItemCategories.value.count - 1)
         } else {
             todoItemCategories.value.append(category)
         }
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tAdd new Category with id:\(category.id).")
     }
 }
 
 // MARK: - Private Extension
 private extension DataService {
+    func createData() {
+        guard fileCache.todoItems.isEmpty else {
+            getItemsFromFileCache()
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tGet TodoItems from FileCahce.")
+            return
+        }
+        createMockData()
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tCreate TodoItems MockData.")
+    }
+    
     func createMockData() {
         todoItems.send([
             .init(
@@ -74,8 +96,8 @@ private extension DataService {
                 isDone: true,
                 modifyDate: nil,
                 category: .init(
-                    name: AppConstant.TodoItemCategory.workName,
-                    hexColor: AppConstant.TodoItemCategory.workHexColor
+                    name: AppConstant.TodoItemCategory.hobbyName,
+                    hexColor: AppConstant.TodoItemCategory.hobbyHexColor
                 )
             ),
             .init(
@@ -88,36 +110,6 @@ private extension DataService {
                     name: AppConstant.TodoItemCategory.studyName,
                     hexColor: AppConstant.TodoItemCategory.studyHexColor
                 )
-            ),
-            .init(
-                text: "4_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
-                importance: .unimportant,
-                deadline: .now + 72 * 60 * 60,
-                isDone: false,
-                modifyDate: nil,
-                category: .init(
-                    name: AppConstant.TodoItemCategory.hobbyName,
-                    hexColor: AppConstant.TodoItemCategory.hobbyHexColor
-                )
-            ),
-            .init(
-                text: "5_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
-                importance: .unimportant,
-                deadline: .now + 172 * 60 * 60,
-                isDone: false,
-                modifyDate: nil,
-                category: .init(
-                    name: AppConstant.TodoItemCategory.studyName,
-                    hexColor: AppConstant.TodoItemCategory.studyHexColor
-                )
-            ),
-            .init(
-                text: "6_Купить что-то, где-то, зачем-то, но зачем не очень понятно, Купить что-то, где-то, зачем-то, но зачем не очень понятно",
-                importance: .unimportant,
-                deadline: .now + 48 * 60 * 60,
-                isDone: false,
-                modifyDate: nil,
-                category: nil
             )
         ])
         
@@ -139,7 +131,12 @@ private extension DataService {
             .init(name: AppConstant.TodoItemCategory.workName, hexColor: AppConstant.TodoItemCategory.workHexColor),
             .init(name: AppConstant.TodoItemCategory.studyName, hexColor: AppConstant.TodoItemCategory.studyHexColor),
             .init(name: AppConstant.TodoItemCategory.hobbyName, hexColor: AppConstant.TodoItemCategory.hobbyHexColor),
-            .init(name: AppConstant.TodoItemCategory.otherName, hexColor: AppConstant.TodoItemCategory.otherHexColor),
+            .init(name: AppConstant.TodoItemCategory.otherName, hexColor: AppConstant.TodoItemCategory.otherHexColor)
         ])
+    }
+    
+    func getItemsFromFileCache() {
+        let cachedTodoItems = fileCache.todoItems.map { $0.1 }.sorted { $0.creationDate < $1.creationDate }
+        todoItems.send(cachedTodoItems)
     }
 }

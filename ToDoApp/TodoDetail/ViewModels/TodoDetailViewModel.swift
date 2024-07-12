@@ -16,8 +16,8 @@ final class TodoDetailViewModel: ObservableObject {
     @Published var todoItemHasDeadline: Bool
     @Published var todoItemHexColorValue: String
     @Published var todoItemColor: Color
-    @Published var todoItemCategory: TodoItem.Category
-    @Published var todoItemCategories = [TodoItem.Category]()
+    @Published var todoItemCategory: TodoItemCategory
+    @Published var todoItemCategories = [TodoItemCategory]()
     
     // MARK: - Private Properties
     private let dataService: DataServiceProtocol
@@ -45,7 +45,7 @@ final class TodoDetailViewModel: ObservableObject {
         todoItemHasDeadline = todoItem?.deadline != nil
         todoItemHexColorValue = todoItem?.hexColor ?? "#FFFFFF"
         todoItemColor = Color.convertFromHex(todoItem?.hexColor ?? "#FFFFFF") ?? .white
-        todoItemCategory = todoItem?.category ?? TodoItem.Category(
+        todoItemCategory = todoItem?.category ?? TodoItemCategory(
             name: AppConstant.TodoItemCategory.otherName,
             hexColor: AppConstant.TodoItemCategory.otherHexColor
         )
@@ -75,7 +75,7 @@ final class TodoDetailViewModel: ObservableObject {
     
     func addNewTodoItemCategory(with name: String, and hexColor: String) {
         guard !name.isEmpty else { return }
-        let newCategory = TodoItem.Category(name: name, hexColor: hexColor)
+        let newCategory = TodoItemCategory(name: name, hexColor: hexColor)
         dataService.addNewTodoItemCategory(newCategory)
     }
     

@@ -19,15 +19,15 @@ struct TodoListHeaderView: View {
             Text("Выполнено - \(isDoneCount)")
             Spacer()
             Menu {
-                Button(action: {
+                Button {
                     sortTodoItems.toggle()
-                }) {
+                } label: {
                     Text("Сортировка по добавлению/важности")
                 }
                 
-                Button(action: {
+                Button {
                     showIsDoneItems.toggle()
-                }) {
+                } label: {
                     Text("Скрыть/показать выполненное")
                 }
             } label: {

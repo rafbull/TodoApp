@@ -7,6 +7,7 @@
 
 import Foundation
 import Combine
+import CocoaLumberjackSwift
 
 final class TodoListViewModel: ObservableObject {
     // MARK: - Internal Properties
@@ -25,8 +26,7 @@ final class TodoListViewModel: ObservableObject {
     var sortedByImportance: [TodoItem] {
         todoItems.sorted { lhs, rhs in
             if let lhsIndex = TodoItem.Importance.allCases.firstIndex(of: lhs.importance),
-               let rhsIndex = TodoItem.Importance.allCases.firstIndex(of: rhs.importance)
-            {
+               let rhsIndex = TodoItem.Importance.allCases.firstIndex(of: rhs.importance) {
                 return lhsIndex > rhsIndex
             }
             return false
@@ -34,13 +34,15 @@ final class TodoListViewModel: ObservableObject {
     }
     
     let dataService: DataServiceProtocol
+    let networkService: NetworkServiceProtocol
     
     // MARK: - Private Properties
     private var subscriptions = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    init(dataService: DataServiceProtocol) {
+    init(dataService: DataServiceProtocol, networkService: NetworkServiceProtocol) {
         self.dataService = dataService
+        self.networkService = networkService
         getTodoItems()
     }
     
@@ -57,9 +59,13 @@ final class TodoListViewModel: ObservableObject {
             category: todoItem.category
         )
         
-        guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else { return }
+        guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else {
+            DDLogWarn("File: \(#fileID) Function: \(#function)\n\tTodoItem with id:\(updatedItem.id) is not found!")
+            return
+        }
         todoItems[index] = updatedItem
         dataService.addNewOrUpdate(updatedItem)
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tUpdate TodoItem with id:\(updatedItem.id). \"isDone\": \(updatedItem.isDone)")
     }
     
     func addNewItem(with text: String) {
@@ -76,13 +82,25 @@ final class TodoListViewModel: ObservableObject {
     }
     
     func delete(_ todoItem: TodoItem) {
-        guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else { return }
+        guard let index = todoItems.firstIndex(where: { $0.id == todoItem.id }) else {
+            DDLogWarn("File: \(#fileID) Function: \(#function)\n\tTodoItem with id:\(todoItem.id) is not found!")
+            return
+        }
         todoItems.remove(at: index)
         dataService.delete(todoItem)
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tDelete TodoItem with id:\(todoItem.id).")
     }
     
     func viewIsOnAppear() {
         getTodoItems()
+    }
+
+    func startTask() {
+        networkService.startTask()
+    }
+
+    func cancelTask() {
+        networkService.cancelTask()
     }
 }
 

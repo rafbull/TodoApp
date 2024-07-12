@@ -9,7 +9,7 @@ import UIKit
 
 final class TodoCalendarCollectionViewDataSource: NSObject, UICollectionViewDataSource {
     // MARK: - Private Properties
-    private let viewModel: TodoCalendarViewModelCollectionViewProtocol
+    private let viewModel: TodoCalendarCollectionViewModelProtocol
     
     // MARK: - Initialization
     init(_ viewModel: TodoCalendarViewModelProtocol) {

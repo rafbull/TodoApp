@@ -12,7 +12,7 @@ struct TodoCalendarModel {
     var attributedText: NSAttributedString
     let deadLine: Date?
     let isDone: Bool
-    let category: TodoItem.Category?
+    let category: TodoItemCategory?
 }
 
 extension TodoCalendarModel {

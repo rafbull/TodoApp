@@ -26,9 +26,9 @@ extension TodoItem {
         let categoryName = components[9]
         let categoryHexColor = components[10]
         
-        let category: Category?
+        let category: TodoItemCategory?
         if !categoryId.isEmpty && !categoryName.isEmpty && !categoryHexColor.isEmpty {
-            category = Category(id: categoryId, name: categoryName, hexColor: categoryHexColor)
+            category = TodoItemCategory(id: categoryId, name: categoryName, hexColor: categoryHexColor)
         } else {
             category = nil
         }

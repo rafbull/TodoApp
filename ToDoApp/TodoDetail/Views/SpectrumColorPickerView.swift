@@ -103,17 +103,17 @@ private extension SpectrumColorPickerView {
     
     func hexString(for color: Color) -> String {
         let components = color.cgColor?.components
-        let r = Int((components?[0] ?? 0) * 255)
-        let g = Int((components?[1] ?? 0) * 255)
-        let b = Int((components?[2] ?? 0) * 255)
-        let a = Int((components?[3] ?? 1) * 255)
+        let red = Int((components?[0] ?? 0) * 255)
+        let green = Int((components?[1] ?? 0) * 255)
+        let blue = Int((components?[2] ?? 0) * 255)
+        let alpha = Int((components?[3] ?? 1) * 255)
         
         let convertedValue: String
         
-        if a == 255 {
-            convertedValue = String(format: "#%02X%02X%02X", r, g, b)
+        if alpha == 255 {
+            convertedValue = String(format: "#%02X%02X%02X", red, green, blue)
         } else {
-            convertedValue = String(format: "#%02X%02X%02X%02X", r, g, b, a)
+            convertedValue = String(format: "#%02X%02X%02X%02X", red, green, blue, alpha)
         }
         return convertedValue
     }

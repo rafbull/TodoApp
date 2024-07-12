@@ -115,7 +115,7 @@ private extension TodoCalendarView {
             tableView.topAnchor.constraint(equalTo: separatorView.bottomAnchor),
             tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
     }
 }

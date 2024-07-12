@@ -6,8 +6,9 @@
 //
 
 import Foundation
+import ToDoAppFileCache
 
-struct TodoItem: Identifiable, Hashable {
+struct TodoItem: Identifiable, Hashable, FileCachable {
     let id: String
     let text: String
     let importance: Importance
@@ -16,7 +17,7 @@ struct TodoItem: Identifiable, Hashable {
     let creationDate: Date
     let modifyDate: Date?
     let hexColor: String
-    let category: Category?
+    let category: TodoItemCategory?
     
     // MARK: - Initialization
     init(
@@ -28,7 +29,7 @@ struct TodoItem: Identifiable, Hashable {
         creationDate: Date = Date(),
         modifyDate: Date?,
         hexColor: String = "#FFFFFF",
-        category: Category?
+        category: TodoItemCategory?
     ) {
         self.id = id
         self.text = text
@@ -50,23 +51,23 @@ extension TodoItem {
         case important
     }
     
-    struct Category: Identifiable, Hashable {
-        let id: String
-        let name: String
-        let hexColor: String?
-        
-        enum PropertyName: String {
-            case id
-            case name
-            case hexColor
-        }
-        
-        init(id: String = UUID().uuidString, name: String, hexColor: String?) {
-            self.id = id
-            self.name = name
-            self.hexColor = hexColor
-        }
-    }
+//    struct Category: Identifiable, Hashable {
+//        let id: String
+//        let name: String
+//        let hexColor: String?
+//        
+//        enum PropertyName: String {
+//            case id
+//            case name
+//            case hexColor
+//        }
+//        
+//        init(id: String = UUID().uuidString, name: String, hexColor: String?) {
+//            self.id = id
+//            self.name = name
+//            self.hexColor = hexColor
+//        }
+//    }
     
     enum PropertyName: String, CaseIterable {
         case id

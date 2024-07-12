@@ -90,14 +90,19 @@ struct TodoListRowView_Previews: PreviewProvider {
         Group {
             TodoListRowView(
                 todoItem: firstTodoItem,
-                viewModel: TodoListViewModel(dataService: DataService())
+                viewModel: TodoListViewModel(
+                    dataService: DataService(),
+                    networkService: NetworkService()
+                )
             )
             TodoListRowView(
                 todoItem: secondTodoItem,
-                viewModel: TodoListViewModel(dataService: DataService())
+                viewModel: TodoListViewModel(
+                    dataService: DataService(),
+                    networkService: NetworkService()
+                )
             )
         }
         .previewLayout(.sizeThatFits)
     }
 }
-

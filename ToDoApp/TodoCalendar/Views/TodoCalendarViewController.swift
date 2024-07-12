@@ -7,6 +7,7 @@
 
 import UIKit
 import Combine
+import CocoaLumberjackSwift
 
 final class TodoCalendarViewController: UIViewController {
     // MARK: - Private Properties
@@ -46,6 +47,14 @@ final class TodoCalendarViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: animated)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoCalendarViewController Did Appear")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoCalendarViewController Did Disappear")
     }
 }
 

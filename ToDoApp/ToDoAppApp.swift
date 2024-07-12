@@ -9,11 +9,15 @@ import SwiftUI
 
 @main
 struct ToDoAppApp: App {
-    private let todoListViewModel = TodoListViewModel(dataService: DataService())
+    private let todoListViewModel = TodoListViewModel(dataService: DataService(), networkService: NetworkService())
     
     var body: some Scene {
         WindowGroup {
             TodoListView(viewModel: todoListViewModel)
         }
+    }
+    
+    init() {
+        Logger.setupLogger()
     }
 }
