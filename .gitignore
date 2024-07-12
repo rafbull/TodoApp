@@ -4,6 +4,8 @@
 xcuserdata/
 
 # CocoaPods
+Pods/
+# Podfile.lock
 
 ## Build generated
 build/
@@ -24,4 +26,4 @@ DerivedData/
 # Ignore Mac DS_Store files
 .DS_Store
 *.xcuserstate
-Podfile.lock
+# Podfile.lock
