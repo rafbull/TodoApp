@@ -66,6 +66,14 @@ private extension TodoListView {
             }
             .navigationTitle(UIConstant.title)
             .navigationBarItems(leading: showCalendarButton)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    networkStartTest
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    networkCancelTest
+                }
+            }
             .onAppear {
                 UITableView.appearance().backgroundColor = UIColor(AppColor.primaryBackground)
             }
@@ -152,6 +160,22 @@ private extension TodoListView {
             Image(systemName: "calendar")
         }
     }
+    
+    var networkStartTest: some View {
+        Button {
+            viewModel.startTask()
+        } label: {
+            Image(systemName: "play")
+        }
+    }
+    
+    var networkCancelTest: some View {
+        Button {
+            viewModel.cancelTask()
+        } label: {
+            Image(systemName: "stop")
+        }
+    }
 
     // MARK: - Private Methods
     func createLeadingSwipeIsDoneButton(_ todoItem: TodoItem) -> some View {
@@ -187,6 +211,9 @@ private extension TodoListView {
 // MARK: - PreviewProvider
 struct TodoListView_Previews: PreviewProvider {
     static var previews: some View {
-        TodoListView(viewModel: TodoListViewModel(dataService: DataService()))
+        TodoListView(viewModel: TodoListViewModel(
+            dataService: DataService(),
+            networkService: NetworkService()
+        ))
     }
 }

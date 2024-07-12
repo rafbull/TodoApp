@@ -34,13 +34,15 @@ final class TodoListViewModel: ObservableObject {
     }
     
     let dataService: DataServiceProtocol
+    let networkService: NetworkServiceProtocol
     
     // MARK: - Private Properties
     private var subscriptions = Set<AnyCancellable>()
     
     // MARK: - Initialization
-    init(dataService: DataServiceProtocol) {
+    init(dataService: DataServiceProtocol, networkService: NetworkServiceProtocol) {
         self.dataService = dataService
+        self.networkService = networkService
         getTodoItems()
     }
     
@@ -91,6 +93,14 @@ final class TodoListViewModel: ObservableObject {
     
     func viewIsOnAppear() {
         getTodoItems()
+    }
+
+    func startTask() {
+        networkService.startTask()
+    }
+
+    func cancelTask() {
+        networkService.cancelTask()
     }
 }
 
