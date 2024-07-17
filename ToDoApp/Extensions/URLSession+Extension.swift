@@ -10,21 +10,14 @@ import CocoaLumberjackSwift
 
 extension URLSession {
     func dataTask(for urlRequest: URLRequest) async throws -> (Data, URLResponse) {
-        var task: URLSessionDataTask?
-        let semaphore = DispatchSemaphore(value: 1)
-        let cancelTask = {
-            semaphore.wait()
-            task?.cancel()
-            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tCanceled task.")
-            semaphore.signal()
-        }
+        let cancellableTask = CancellableTask()
         
         return try await withTaskCancellationHandler {
             if Task.isCancelled {
                 throw CancellationError()
             }
             return try await withCheckedThrowingContinuation { continuation in
-                task = dataTask(with: urlRequest) { data, response, error in
+                let task = dataTask(with: urlRequest) { data, response, error in
                     
                     if Task.isCancelled {
                         return continuation.resume(throwing: CancellationError())
@@ -39,23 +32,25 @@ extension URLSession {
                         return continuation.resume(throwing: URLError(.badServerResponse))
                     }
                     
-                    if Task.isCancelled {
-                        return continuation.resume(throwing: CancellationError())
-                    }
-                    
                     continuation.resume(returning: (data, response))
                 }
                 
                 if Task.isCancelled {
-                    cancelTask()
+                    cancellableTask.cancel()
                     continuation.resume(throwing: CancellationError())
                     return
                 }
-                
-                task?.resume()
+
+                task.resume()
+                cancellableTask.add(task)
+
+                if Task.isCancelled {
+                    return continuation.resume(throwing: CancellationError())
+                }
             }
         } onCancel: {
-            cancelTask()
+            cancellableTask.cancel()
+            DDLogInfo("File: \(#fileID) Function: \(#function)\n\tCanceled task.")
         }
     }
 }
