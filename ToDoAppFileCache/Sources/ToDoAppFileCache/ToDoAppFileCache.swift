@@ -13,8 +13,9 @@ public final class FileCache<T: FileCachable> {
     public func addItem(_ todoItem: T) {
         todoItems[todoItem.id] = todoItem
     }
-    
-    public func removeItem(by id: String) {
+
+    @discardableResult
+    public func removeItem(by id: String) -> T? {
         todoItems.removeValue(forKey: id)
     }
     

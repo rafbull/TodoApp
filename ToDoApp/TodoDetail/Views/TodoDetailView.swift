@@ -71,15 +71,11 @@ struct TodoDetailView: View {
                     }
                     .disabled(textEditorText.isEmpty)
                 }
+                ToolbarItem(placement: .keyboard) {
+                    hideKeyboardButton
+                }
             }
         }
-        // TODO: - tap gesture to close keyboard
-//        .simultaneousGesture(
-//            TapGesture()
-//                .onEnded { _ in
-//                    textEditorIsFocused = false
-//                }
-//        )
         .onAppear {
             DDLogInfo("File: \(#fileID) Function: \(#function)\n\tTodoDetailView Appears")
         }
@@ -112,6 +108,15 @@ struct TodoDetailView: View {
         .frame(maxWidth: .infinity)
         .foregroundColor(textEditorText.isEmpty ? AppColor.tertiaryLabel : AppColor.red)
         .disabled(textEditorText.isEmpty)
+    }
+
+    private var hideKeyboardButton: some View {
+        Button {
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        } label: {
+            Image(systemName: "keyboard.chevron.compact.down")
+        }
+        .frame(maxWidth: .infinity, alignment: .trailing)
     }
 }
 
